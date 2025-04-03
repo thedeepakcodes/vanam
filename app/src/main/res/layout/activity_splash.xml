@@ -11,15 +11,14 @@
     tools:context=".SplashActivity">
 
     <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="456dp"
-        android:layout_height="849dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/img" />
+        app:srcCompat="@drawable/splash_background" />
 
     <ImageView
         android:id="@+id/imageView"
@@ -30,7 +29,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/logo" />
+        app:srcCompat="@drawable/splash_logo" />
 
     <TextView
         android:id="@+id/textView"
