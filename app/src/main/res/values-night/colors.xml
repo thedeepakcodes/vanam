@@ -3,4 +3,18 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="splashBg">#EAF6EA</color>
+    <color name="textColor">#000000</color>
+    <color name="loaderBg">#FF121212</color>
+
+    <!-- GrayScale -->
+    <color name="gray_900">#F5F5F5</color>
+    <color name="gray_800">#E0E0E0</color>
+    <color name="gray_700">#BDBDBD</color>
+    <color name="gray_600">#9E9E9E</color>
+    <color name="gray_500">#757575</color>
+    <color name="gray_400">#555555</color>
+    <color name="gray_300">#3D3D3D</color>
+    <color name="gray_200">#2C2C2C</color>
+    <color name="gray_100">#1E1E1E</color>
+    <color name="gray_50">#121212</color>
 </resources>

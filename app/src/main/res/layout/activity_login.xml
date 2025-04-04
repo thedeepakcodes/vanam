@@ -5,6 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     tools:context=".LoginActivity">
 
     <ImageView
@@ -90,6 +91,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="start"
+                    android:textColor="@color/textColor"
                     android:text="Continue with Google"
                     android:textSize="16sp" />
 
@@ -126,6 +128,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="start"
+                    android:textColor="@color/textColor"
                     android:text="Continue with Phone"
                     android:textSize="16sp" />
 
@@ -164,7 +167,7 @@
         android:id="@+id/footer_text"
         android:layout_width="347dp"
         android:layout_height="19dp"
-        android:layout_marginBottom="48dp"
+        android:layout_marginBottom="50dp"
         android:text="Every Tree Counts – Your Green Journey Starts Here"
         android:textColor="@android:color/white"
         android:textSize="14sp"
@@ -175,8 +178,9 @@
 
     <ImageView
         android:id="@+id/imageView3"
-        android:layout_width="32dp"
+        android:layout_width="35dp"
         android:layout_height="35dp"
+        android:layout_marginTop="5dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/footer_text"

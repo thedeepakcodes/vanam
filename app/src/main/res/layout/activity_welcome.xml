@@ -4,7 +4,9 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".WelcomeActivity">
+    tools:context=".WelcomeActivity"
+    android:fitsSystemWindows="true"
+    >
 
     <ImageView
         android:layout_width="match_parent"
@@ -63,7 +65,7 @@
         app:cardCornerRadius="0dp"
         app:contentPadding="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginVertical="50dp"
+        android:layout_marginVertical="30dp"
         android:layout_marginHorizontal="32dp"
         android:backgroundTint="#15FFFFFF"
         android:clickable="true"
