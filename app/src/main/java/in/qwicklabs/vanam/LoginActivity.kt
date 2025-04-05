@@ -1,8 +1,8 @@
 package `in`.qwicklabs.vanam
 
+import android.accounts.AccountManager
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -10,7 +10,10 @@ import androidx.credentials.CredentialManager
 import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialRequest
 import androidx.credentials.GetCredentialResponse
+import androidx.credentials.exceptions.GetCredentialCancellationException
 import androidx.credentials.exceptions.GetCredentialException
+import androidx.credentials.exceptions.GetCredentialProviderConfigurationException
+import androidx.credentials.exceptions.NoCredentialException
 import androidx.lifecycle.lifecycleScope
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
@@ -19,101 +22,123 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import `in`.qwicklabs.vanam.databinding.ActivityLoginBinding
 import `in`.qwicklabs.vanam.profile.CompleteProfile
-import `in`.qwicklabs.vanam.utils.Strings
+import `in`.qwicklabs.vanam.utils.Loader
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
     private lateinit var auth: FirebaseAuth
-    private val credentialManager = CredentialManager.create(this)
+    private val credentialManager by lazy { CredentialManager.create(this) }
+    private lateinit var loader: Loader
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
+        loader = Loader(this)
+
         binding = ActivityLoginBinding.inflate(layoutInflater)
         auth = FirebaseAuth.getInstance()
-
         setContentView(binding.root)
 
         binding.continueWithGoogle.setOnClickListener {
-            val googleIdOption: GetGoogleIdOption =
-                GetGoogleIdOption.Builder().setFilterByAuthorizedAccounts(true)
-                    .setServerClientId(Strings.WEB_CLIENT_ID).build()
+            loader.title.text = "Signing In"
+            loader.dialog.show()
+            val googleIdOption = GetGoogleIdOption.Builder()
+                .setFilterByAuthorizedAccounts(false)
+                .setServerClientId(getString(R.string.web_client_id))
+                .build()
 
-            val request: GetCredentialRequest =
-                GetCredentialRequest.Builder().addCredentialOption(googleIdOption).build()
-
+            val request = GetCredentialRequest.Builder()
+                .addCredentialOption(googleIdOption)
+                .build()
 
             lifecycleScope.launch(Dispatchers.IO) {
                 try {
                     val result = credentialManager.getCredential(this@LoginActivity, request)
-                    withContext(Dispatchers.Main) { googleSignIn(result) }
+                    withContext(Dispatchers.Main) { handleSignInResult(result) }
                 } catch (e: GetCredentialException) {
-                    withContext(Dispatchers.Main) { handleFailure(e) }
+                    loader.dialog.dismiss()
+                    withContext(Dispatchers.Main) { handleSignInFailure(e) }
                 }
             }
         }
     }
 
-    private fun googleSignIn(result: GetCredentialResponse) {
+    private fun handleSignInResult(result: GetCredentialResponse) {
         when (val credential = result.credential) {
             is CustomCredential -> {
                 if (credential.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) {
                     try {
-                        val googleIdTokenCredential =
-                            GoogleIdTokenCredential.createFrom(credential.data)
+                        val googleIdToken = GoogleIdTokenCredential
+                            .createFrom(credential.data)
+                            .idToken
 
-                        firebaseAuthWithGoogle(googleIdTokenCredential.idToken)
+                        firebaseAuthWithGoogle(googleIdToken)
                     } catch (e: GoogleIdTokenParsingException) {
-                        Log.e("GetCredential", "Received an invalid google id token response", e)
+                        loader.dialog.dismiss()
+                        Toast.makeText(
+                            this,
+                            "Authentication error: Invalid token format",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
             }
 
             else -> {
-                Log.e("GetCredential", "Unexpected type of credential")
+                loader.dialog.dismiss()
+                Toast.makeText(
+                    this,
+                    "Unsupported authentication method",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }
 
-    private fun handleFailure(e: GetCredentialException) {
+    private fun handleSignInFailure(e: GetCredentialException) {
         when (e) {
-            is androidx.credentials.exceptions.GetCredentialCancellationException -> {
-                Log.w("GetCredential", "User canceled the sign-in process")
+            is GetCredentialCancellationException -> {
+                Toast.makeText(this, "Sign-in cancelled", Toast.LENGTH_SHORT).show()
             }
 
-            is androidx.credentials.exceptions.NoCredentialException -> {
-                Log.w("GetCredential", "No matching credentials found")
+            is NoCredentialException -> {
+                showAccountSetupPrompt()
             }
 
-            is androidx.credentials.exceptions.GetCredentialUnknownException -> {
-                Log.e("GetCredential", "Unknown error occurred", e)
-            }
-
-            is androidx.credentials.exceptions.GetCredentialProviderConfigurationException -> {
-                Log.e("GetCredential", "Configuration error with credential provider", e)
+            is GetCredentialProviderConfigurationException -> {
+                Toast.makeText(
+                    this,
+                    "Configuration error. Please check app settings.",
+                    Toast.LENGTH_LONG
+                ).show()
             }
 
             else -> {
-                Log.e("GetCredential", "Unhandled exception", e)
+                Toast.makeText(
+                    this,
+                    "Authentication failed: ${e.message ?: "Unknown error"}",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }
-
 
     private fun firebaseAuthWithGoogle(idToken: String) {
         val credential = GoogleAuthProvider.getCredential(idToken, null)
         auth.signInWithCredential(credential)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-                    proceedToNextActivity()
+                    loader.dialog.dismiss()
+                    navigateToProfile()
                 } else {
-                    Log.e("Firebase", "signInWithCredential:failure", task.exception)
+                    loader.dialog.dismiss()
                     Toast.makeText(
-                        this@LoginActivity,
+                        this,
                         "Authentication failed: ${task.exception?.message}",
                         Toast.LENGTH_SHORT
                     ).show()
@@ -121,8 +146,46 @@ class LoginActivity : AppCompatActivity() {
             }
     }
 
-    private fun proceedToNextActivity() {
-        Toast.makeText(this, "Login Successful", Toast.LENGTH_SHORT).show()
+    private fun showAccountSetupPrompt() {
+
+        val accountManager = AccountManager.get(this)
+        accountManager.addAccount(
+            "com.google",
+            null,
+            null,
+            null,
+            this,
+            { future ->
+                try {
+                    val result = future.result
+                    val accountName = result.getString(AccountManager.KEY_ACCOUNT_NAME)
+                    if (accountName != null) {
+                        loader.title.text = "Fetching account.."
+                        loader.dialog.show()
+
+                        binding.continueWithGoogle.performClick()
+
+                    } else {
+                        Toast.makeText(
+                            this,
+                            "You need to add a Google account first.",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                } catch (_: Exception) {
+                    Toast.makeText(
+                        this,
+                        "You cancelled the account setup.",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            },
+            null
+        )
+    }
+
+    private fun navigateToProfile() {
+        Toast.makeText(this, "Sign-in successful", Toast.LENGTH_SHORT).show()
         startActivity(Intent(this, CompleteProfile::class.java))
         finish()
     }
