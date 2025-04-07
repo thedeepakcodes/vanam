@@ -11,5 +11,8 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Setup Profile Page"/>
+        android:text="Setup Profile Page"
+        tools:layout_editor_absoluteX="-103dp"
+        tools:layout_editor_absoluteY="-325dp" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
