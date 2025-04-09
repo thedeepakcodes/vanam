@@ -13,7 +13,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:fillViewport="true"
-        android:background="#E3F5E0"
+        android:background="#E6FFF2"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -202,7 +202,7 @@
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:backgroundTint="#E3F6E0"
+                    android:backgroundTint="#E6FFF2"
                     app:strokeColor="@android:color/transparent">
 
                     <TextView
