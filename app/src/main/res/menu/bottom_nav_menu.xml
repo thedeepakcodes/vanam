@@ -1,0 +1,22 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_home"
+        android:icon="@drawable/ic_home_filled"
+        android:textColor="#00A651"
+        android:title="Home" />
+    <item
+        android:id="@+id/nav_map"
+        android:icon="@drawable/ic_map_outline"
+        android:textColor="#00A651"
+        android:title="Map" />
+    <item
+        android:id="@+id/nav_community"
+        android:icon="@drawable/ic_community_outline"
+        android:textColor="#00A651"
+        android:title="Community" />
+    <item
+        android:id="@+id/nav_profile"
+        android:icon="@drawable/ic_profile_outline"
+        android:textColor="#00A651"
+        android:title="Profile" />
+</menu>
