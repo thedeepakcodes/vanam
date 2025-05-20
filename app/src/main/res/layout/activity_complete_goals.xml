@@ -2,85 +2,98 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layoutGoals"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/GoalsLayout"
     android:background="#E6FFF2"
+    android:fitsSystemWindows="true"
     tools:context=".profile.GoalsActivity">
 
+    <!-- Title -->
     <TextView
-        android:id="@+id/titleText"
+        android:id="@+id/tvGoalsTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Goals"
         android:textSize="22sp"
         android:textStyle="bold"
         android:textColor="@color/black"
+        android:layout_marginTop="24dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_margin="16dp"/>
+        app:layout_constraintEnd_toEndOf="parent" />
 
+    <!-- Subtitle -->
     <TextView
-        android:id="@+id/subtitleText"
+        android:id="@+id/tvGoalsSubtitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:text="Set Your Gardening Objectives"
         android:textSize="14sp"
         android:textColor="@color/black"
-        app:layout_constraintTop_toBottomOf="@id/titleText"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@id/tvGoalsTitle"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent" />
 
+    <!-- Progress Bar -->
     <ProgressBar
-        android:id="@+id/progressBar"
+        android:id="@+id/goalsProgressBar"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="0dp"
         android:layout_height="6dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
         android:progress="100"
         android:progressTint="#000000"
         android:progressBackgroundTint="#E9CDED"
-        app:layout_constraintTop_toBottomOf="@+id/subtitleText"
+        app:layout_constraintTop_toBottomOf="@id/tvGoalsSubtitle"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="22dp"
-        android:layout_marginHorizontal="20dp"/>
+        app:layout_constraintEnd_toEndOf="parent" />
 
+    <!-- Step Indicator -->
     <TextView
-        android:id="@+id/stepLevel"
+        android:id="@+id/tvStepIndicator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Step 4 of 4"
         android:textSize="12sp"
         android:textColor="@color/black"
-        app:layout_constraintTop_toBottomOf="@+id/progressBar"
-        app:layout_constraintStart_toStartOf="parent"
         android:layout_marginTop="12dp"
-        android:layout_marginStart="30dp"/>
+        android:layout_marginStart="30dp"
+        app:layout_constraintTop_toBottomOf="@id/goalsProgressBar"
+        app:layout_constraintStart_toStartOf="parent" />
 
+    <!-- Goals Grid -->
     <androidx.gridlayout.widget.GridLayout
-        android:id="@+id/GoalsGrid"
+        android:id="@+id/gridGoalsOptions"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:padding="8dp"
         app:alignmentMode="alignMargins"
         app:columnCount="2"
         app:rowCount="2"
-        android:padding="8dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@+id/stepLevel"
+        app:layout_constraintTop_toBottomOf="@id/tvStepIndicator"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginHorizontal="10dp">
+        app:layout_constraintEnd_toEndOf="parent">
 
+        <!-- Repeatable Card Items -->
+        <!-- Hobby Gardening -->
         <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardHobbyGardening"
             android:layout_width="0dp"
             android:layout_height="100dp"
             android:layout_margin="8dp"
-            app:strokeColor="#E6FFF0"
-            app:cardBackgroundColor="#E6FFF2"
-            app:strokeWidth="1dp"
             app:cardCornerRadius="12dp"
+            app:cardBackgroundColor="#E6FFF2"
+            android:clickable="true"
+            android:focusable="true"
+            app:strokeColor="#CCEBD7"
+            app:strokeWidth="1dp"
             app:layout_columnWeight="1">
 
             <LinearLayout
@@ -97,20 +110,25 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
                     android:text="Hobby Gardening"
-                    android:textStyle="bold"
                     android:textColor="@color/black"
-                    android:layout_marginTop="4dp"/>
+                    android:textStyle="bold" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
+
+        <!-- Commercial Growing -->
         <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardCommercialGrowing"
             android:layout_width="0dp"
             android:layout_height="100dp"
+            android:clickable="true"
+            android:focusable="true"
             android:layout_margin="8dp"
-            app:strokeColor="#E6FFF0"
+            app:cardCornerRadius="12dp"
+            app:strokeColor="#CCEBD7"
             app:cardBackgroundColor="#E6FFF2"
             app:strokeWidth="1dp"
-            app:cardCornerRadius="12dp"
             app:layout_columnWeight="1">
 
             <LinearLayout
@@ -127,20 +145,25 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
                     android:text="Commercial Growing"
-                    android:textStyle="bold"
                     android:textColor="@color/black"
-                    android:layout_marginTop="4dp"/>
+                    android:textStyle="bold" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
+
+        <!-- Self-Sustaining -->
         <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardSelfSustaining"
             android:layout_width="0dp"
             android:layout_height="100dp"
             android:layout_margin="8dp"
-            app:strokeColor="#E6FFF0"
-            app:cardBackgroundColor="#E6FFF2"
-            app:strokeWidth="1dp"
             app:cardCornerRadius="12dp"
+            app:cardBackgroundColor="#E6FFF2"
+            android:clickable="true"
+            android:focusable="true"
+            app:strokeColor="#CCEBD7"
+            app:strokeWidth="1dp"
             app:layout_columnWeight="1">
 
             <LinearLayout
@@ -157,20 +180,25 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
                     android:text="Self-Sustaining"
-                    android:textStyle="bold"
                     android:textColor="@color/black"
-                    android:layout_marginTop="4dp"/>
+                    android:textStyle="bold" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
+
+        <!-- Community Garden -->
         <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardCommunityGarden"
             android:layout_width="0dp"
             android:layout_height="100dp"
             android:layout_margin="8dp"
-            app:strokeColor="#E6FFF0"
-            app:cardBackgroundColor="#E6FFF2"
-            app:strokeWidth="1dp"
             app:cardCornerRadius="12dp"
+            app:cardBackgroundColor="#E6FFF2"
+            android:clickable="true"
+            android:focusable="true"
+            app:strokeColor="#CCEBD7"
+            app:strokeWidth="1dp"
             app:layout_columnWeight="1">
 
             <LinearLayout
@@ -187,128 +215,152 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
                     android:text="Community Garden"
-                    android:textStyle="bold"
                     android:textColor="@color/black"
-                    android:layout_marginTop="4dp"/>
+                    android:textStyle="bold" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
     </androidx.gridlayout.widget.GridLayout>
+
+    <!-- Weekly Time Commitment -->
     <TextView
-        android:id="@+id/GoalsLevel"
+        android:id="@+id/tvWeeklyCommitment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Weekly Time Commitment"
-        android:textSize="14sp"
         android:textColor="@color/black"
-        app:layout_constraintTop_toBottomOf="@+id/GoalsGrid"
-        app:layout_constraintStart_toStartOf="parent"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:layout_marginTop="24dp"
         android:layout_marginStart="30dp"
-        android:layout_marginTop="24dp"/>
+        app:layout_constraintTop_toBottomOf="@id/gridGoalsOptions"
+        app:layout_constraintStart_toStartOf="parent" />
 
+    <!-- Seekbar Row -->
     <LinearLayout
-        android:id="@+id/progressBarLayout"
-        android:layout_width="match_parent"
+        android:id="@+id/layoutSeekbar"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:background="#E6FFF0"
         android:padding="16dp"
         android:gravity="center_vertical"
-        app:layout_constraintTop_toBottomOf="@+id/GoalsLevel">
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toBottomOf="@id/tvWeeklyCommitment"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <SeekBar
             android:id="@+id/seekBar"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:max="10"
-            android:progress="5"
+            android:max="50"
+            android:min="3"
+            android:progress="6"
             android:progressTint="#2196F3"
             android:thumbTint="#2196F3"
             android:progressBackgroundTint="#DDD" />
 
         <TextView
-            android:id="@+id/HoursPerWeekText"
+            android:id="@+id/tvHoursPerWeek"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="10 hrs/week"
             android:layout_marginStart="8dp"
+            android:text="6 hrs/week"
             android:textColor="@color/black"
-            android:textSize="16sp"/>
+            android:textSize="16sp" />
     </LinearLayout>
 
+    <!-- Target Achievement -->
     <TextView
-        android:id="@+id/TargetText"
+        android:id="@+id/tvTargetAchievement"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Target Achievement"
         android:textStyle="bold"
+        android:textSize="14sp"
         android:textColor="@color/black"
-        app:layout_constraintTop_toBottomOf="@+id/progressBarLayout"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="2dp"
         android:layout_marginStart="30dp"
-        android:layout_marginTop="20dp"/>
+        app:layout_constraintTop_toBottomOf="@id/layoutSeekbar"
+        app:layout_constraintStart_toStartOf="parent" />
 
+    <!-- Target Grid -->
     <GridLayout
-        android:id="@+id/TargetAchievementGrid"
-        android:layout_width="match_parent"
+        android:id="@+id/gridTargetDuration"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:columnCount="2"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
         android:useDefaultMargins="true"
-        app:layout_constraintTop_toBottomOf="@+id/TargetText"
-        android:layout_marginTop="8dp">
+        app:layout_constraintTop_toBottomOf="@id/tvTargetAchievement"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-        <Button
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn3Months"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_columnWeight="1"
-            android:textColor="@color/black"
+            app:strokeColor="#CCEBD7"
             android:text="3 months"
+            android:textColor="@color/black"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn6Months"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_columnWeight="1"
-            android:textColor="@color/black"
             android:text="6 months"
+            app:strokeColor="#CCEBD7"
+            android:textColor="@color/black"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn1Year"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_columnWeight="1"
-            android:textColor="@color/black"
             android:text="1 year"
+            app:strokeColor="#CCEBD7"
+            android:textColor="@color/black"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnLongTerm"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_columnWeight="1"
-            android:textColor="@color/black"
+            app:strokeColor="#CCEBD7"
             android:text="Long term"
+            android:textColor="@color/black"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
     </GridLayout>
 
+    <!-- Next Button -->
     <com.google.android.material.card.MaterialCardView
-        android:layout_width="391dp"
-        android:layout_height="55dp"
-        android:layout_marginBottom="16dp"
+        android:id="@+id/cardCompleteButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         app:cardCornerRadius="12dp"
         app:cardBackgroundColor="@android:color/black"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.52"
-        app:layout_constraintStart_toStartOf="parent">
+        android:layout_marginVertical="30dp"
+        android:layout_marginHorizontal="20dp"
+        app:layout_constraintTop_toBottomOf="@+id/gridTargetDuration"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="horizontal"
-            android:padding="14dp"
-            tools:ignore="ExtraText">>
+            android:padding="14dp">
 
             <ImageView
                 android:layout_width="20dp"
@@ -318,14 +370,14 @@
                 app:tint="@android:color/white" />
 
             <TextView
-                android:id="@+id/CompleteButtonText"
+                android:id="@+id/tvCompleteButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Complete"
                 android:textColor="@android:color/white"
                 android:textSize="16sp"
                 android:textStyle="bold" />
-
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

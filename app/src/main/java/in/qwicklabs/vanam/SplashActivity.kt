@@ -6,7 +6,7 @@ import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
-import `in`.qwicklabs.vanam.profile.CompleteProfile
+import `in`.qwicklabs.vanam.profile.BasicActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -30,7 +30,7 @@ class SplashActivity : AppCompatActivity() {
             val currentUser = auth.currentUser
 
             if (currentUser != null) {
-                startActivity(Intent(this@SplashActivity, CompleteProfile::class.java))
+                startActivity(Intent(this@SplashActivity, BasicActivity::class.java))
             } else {
                 startActivity(Intent(this@SplashActivity, WelcomeActivity::class.java))
             }
@@ -38,5 +38,4 @@ class SplashActivity : AppCompatActivity() {
         }
 
     }
-
 }

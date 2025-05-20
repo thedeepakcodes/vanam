@@ -20,19 +20,25 @@ import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.firestore.FirebaseFirestore
 import `in`.qwicklabs.vanam.databinding.ActivityLoginBinding
-import `in`.qwicklabs.vanam.profile.CompleteProfile
+import `in`.qwicklabs.vanam.profile.BasicActivity
 import `in`.qwicklabs.vanam.utils.Loader
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
     private lateinit var auth: FirebaseAuth
     private val credentialManager by lazy { CredentialManager.create(this) }
     private lateinit var loader: Loader
+
+    // For Moving to Dashboard or Profile Setup
+    private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
+    private val userCollection by lazy {
+        firestore.collection("Vanam").document("Users").collection("Profile")
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -185,8 +191,22 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun navigateToProfile() {
-        Toast.makeText(this, "Sign-in successful", Toast.LENGTH_SHORT).show()
-        startActivity(Intent(this, CompleteProfile::class.java))
-        finish()
+        FirebaseAuth.getInstance().uid?.let {
+            userCollection.document(it).get()
+                .addOnSuccessListener { doc ->
+                    Toast.makeText(this, "Sign-in successful", Toast.LENGTH_SHORT).show()
+
+                    if (doc.exists() && doc.getBoolean("isProfileSetupComplete") == true) {
+                        getSharedPreferences("VanamPrefs", MODE_PRIVATE).edit()
+                            .putBoolean("isProfileComplete", true).commit()
+
+                        startActivity(Intent(this, Dashboard::class.java))
+                        finish()
+                    } else {
+                        startActivity(Intent(this, BasicActivity::class.java))
+                        finish()
+                    }
+                }
+        }
     }
 }
