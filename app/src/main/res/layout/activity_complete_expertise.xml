@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:id="@+id/expertiseLayout"
     android:background="#E6FFF2"
+    android:fitsSystemWindows="true"
     tools:context=".profile.ExpertiseActivity">
 
     <TextView
@@ -26,7 +27,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="Share Your Planting Experince"
+        android:text="Share Your Planting Experience"
         android:textSize="14sp"
         android:textColor="@color/black"
         app:layout_constraintTop_toBottomOf="@id/titleText"
@@ -46,7 +47,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="22dp"
         android:layout_marginHorizontal="20dp"/>
-    
+
     <TextView
         android:id="@+id/stepLevel"
         android:layout_width="wrap_content"
@@ -74,10 +75,13 @@
         android:layout_marginHorizontal="10dp">
 
         <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardBeginner"
             android:layout_width="0dp"
             android:layout_height="100dp"
             android:layout_margin="8dp"
-            app:strokeColor="#E6FFF0"
+            android:clickable="true"
+            android:focusable="true"
+            app:strokeColor="#CCEBD7"
             app:cardBackgroundColor="#E6FFF2"
             app:strokeWidth="1dp"
             app:cardCornerRadius="12dp"
@@ -103,11 +107,15 @@
                     android:layout_marginTop="4dp"/>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
+
         <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardIntermediate"
             android:layout_width="0dp"
             android:layout_height="100dp"
             android:layout_margin="8dp"
-            app:strokeColor="#E6FFF0"
+            android:clickable="true"
+            android:focusable="true"
+            app:strokeColor="#CCEBD7"
             app:cardBackgroundColor="#E6FFF2"
             app:strokeWidth="1dp"
             app:cardCornerRadius="12dp"
@@ -133,11 +141,15 @@
                     android:layout_marginTop="4dp"/>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
+
         <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardAdvanced"
             android:layout_width="0dp"
             android:layout_height="100dp"
             android:layout_margin="8dp"
-            app:strokeColor="#E6FFF0"
+            android:clickable="true"
+            android:focusable="true"
+            app:strokeColor="#CCEBD7"
             app:cardBackgroundColor="#E6FFF2"
             app:strokeWidth="1dp"
             app:cardCornerRadius="12dp"
@@ -163,11 +175,15 @@
                     android:layout_marginTop="4dp"/>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
+
         <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardExpert"
             android:layout_width="0dp"
             android:layout_height="100dp"
             android:layout_margin="8dp"
-            app:strokeColor="#E6FFF0"
+            android:clickable="true"
+            android:focusable="true"
+            app:strokeColor="#CCEBD7"
             app:cardBackgroundColor="#E6FFF2"
             app:strokeWidth="1dp"
             app:cardCornerRadius="12dp"
@@ -193,25 +209,30 @@
                     android:layout_marginTop="4dp"/>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
+
     </androidx.gridlayout.widget.GridLayout>
+
     <TextView
         android:id="@+id/experienceLevel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Years of Experience"
+        android:textStyle="bold"
         android:textSize="14sp"
         android:textColor="@color/black"
         app:layout_constraintTop_toBottomOf="@+id/expertiseGrid"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginStart="30dp"
-        android:layout_marginTop="24dp"/>
+        android:layout_marginTop="25dp"/>
 
     <LinearLayout
+        android:id="@+id/seekBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:background="#E6FFF0"
-        android:padding="16dp"
+        android:layout_marginTop="10dp"
+        android:padding="20dp"
         android:gravity="center_vertical"
         app:layout_constraintTop_toBottomOf="@+id/experienceLevel">
 
@@ -220,8 +241,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:max="10"
-        android:progress="5"
+        android:max="15"
+        android:progress="0"
         android:progressTint="#2196F3"
         android:thumbTint="#2196F3"
         android:progressBackgroundTint="#DDD" />
@@ -230,21 +251,22 @@
         android:id="@+id/yearsText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="5 years"
+        android:text="0 years"
         android:layout_marginStart="8dp"
         android:textColor="@color/black"
         android:textSize="16sp"/>
 </LinearLayout>
     <com.google.android.material.card.MaterialCardView
-        android:layout_width="391dp"
-        android:layout_height="55dp"
-        android:layout_marginBottom="16dp"
+        android:id="@+id/nextButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         app:cardCornerRadius="12dp"
         app:cardBackgroundColor="@android:color/black"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.52"
-        app:layout_constraintStart_toStartOf="parent">
+        android:layout_marginVertical="40dp"
+        android:layout_marginHorizontal="20dp"
+        app:layout_constraintTop_toBottomOf="@+id/seekBarLayout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -252,7 +274,7 @@
             android:gravity="center"
             android:orientation="horizontal"
             android:padding="14dp"
-            tools:ignore="ExtraText">>
+            tools:ignore="ExtraText">
 
             <ImageView
                 android:layout_width="20dp"

@@ -1,8 +1,12 @@
 [versions]
 agp = "8.9.1"
+androidCountryPicker = "X.Y.Z"
+ccp = "2.4.2"
 coreSplashscreen = "1.0.1"
 credentials = "1.5.0"
 firebaseBom = "33.12.0"
+firebaseStorageKtx = "21.0.1"
+glide = "4.16.0"
 googleid = "1.1.1"
 kotlin = "2.0.21"
 coreKtx = "1.15.0"
@@ -14,14 +18,20 @@ material = "1.12.0"
 activity = "1.10.1"
 constraintlayout = "2.2.1"
 gridlayout = "1.0.0"
+playServicesLocation = "21.3.0"
 
 [libraries]
+android-country-picker = { module = "com.hbb20:android-country-picker", version.ref = "androidCountryPicker" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
 androidx-credentials = { module = "androidx.credentials:credentials", version.ref = "credentials" }
 androidx-credentials-play-services-auth = { module = "androidx.credentials:credentials-play-services-auth", version.ref = "credentials" }
+ccp = { module = "com.hbb20:ccp", version.ref = "ccp" }
 firebase-auth = { module = "com.google.firebase:firebase-auth" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
+firebase-firestore = { module = "com.google.firebase:firebase-firestore" }
+firebase-storage-ktx = { module = "com.google.firebase:firebase-storage-ktx", version.ref = "firebaseStorageKtx" }
+glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
 googleid = { module = "com.google.android.libraries.identity.googleid:googleid", version.ref = "googleid" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
@@ -31,6 +41,7 @@ material = { group = "com.google.android.material", name = "material", version.r
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 androidx-gridlayout = { group = "androidx.gridlayout", name = "gridlayout", version.ref = "gridlayout" }
+play-services-location = { module = "com.google.android.gms:play-services-location", version.ref = "playServicesLocation" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

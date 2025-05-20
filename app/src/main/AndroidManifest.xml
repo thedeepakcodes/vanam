@@ -15,6 +15,9 @@
         android:theme="@style/Theme.Vanam"
         tools:targetApi="31">
         <activity
+            android:name=".Dashboard"
+            android:exported="false" />
+        <activity
             android:name=".SplashActivity"
             android:exported="true"
             android:theme="@style/Theme.Vanam.SplashScreen">
@@ -31,7 +34,16 @@
             android:name=".LoginActivity"
             android:exported="false" />
         <activity
-            android:name=".profile.CompleteProfile"
+            android:name=".profile.BasicActivity"
+            android:exported="false" />
+        <activity
+            android:name=".profile.InterestActivity"
+            android:exported="false" />
+        <activity
+            android:name=".profile.ExpertiseActivity"
+            android:exported="false" />
+        <activity
+            android:name=".profile.GoalsActivity"
             android:exported="false" />
     </application>
 
