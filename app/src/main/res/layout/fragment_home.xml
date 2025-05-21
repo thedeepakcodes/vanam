@@ -1,0 +1,820 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:id="@+id/main"
+    android:layout_height="match_parent"
+    tools:context=".fragments.Home">
+
+    <ImageView
+        android:id="@+id/iv_header_background"
+        android:layout_width="0dp"
+        android:layout_height="220dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/forest_bg"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <View
+        android:id="@+id/view_header_overlay"
+        android:layout_width="0dp"
+        android:layout_height="220dp"
+        android:background="@drawable/header_gradient_overlay"
+        app:layout_constraintEnd_toEndOf="@id/iv_header_background"
+        app:layout_constraintStart_toStartOf="@id/iv_header_background"
+        app:layout_constraintTop_toTopOf="@id/iv_header_background" />
+
+    <LinearLayout
+        android:id="@+id/ll_profile_pic_container"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/bg_circle_white"
+        android:clipToOutline="true"
+        android:outlineProvider="background"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_header_background"
+        app:layout_constraintStart_toStartOf="@id/iv_header_background">
+
+        <ImageView
+            android:id="@+id/iv_profile_picture"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/circular_loader"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_welcome_text_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="20dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_header_background"
+        app:layout_constraintStart_toEndOf="@+id/ll_profile_pic_container">
+
+        <TextView
+            android:id="@+id/tv_greeting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="Good morning"
+            android:textColor="#000000"
+            android:textSize="16dp"
+            tools:ignore="TextSizeCheck" />
+
+        <TextView
+            android:id="@+id/tv_user_first_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="Earth Guardian"
+            android:textColor="#000000"
+            android:textSize="22dp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_notification_bell_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/notification_circle_background"
+        android:elevation="6dp"
+        android:padding="14dp"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_header_background"
+        app:layout_constraintEnd_toEndOf="@+id/iv_header_background">
+
+        <ImageView
+            android:id="@+id/iv_notification_bell"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_centerInParent="true"
+            android:src="@drawable/ic_bell"
+            app:tint="#4b5563"/>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_stats_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="6dp"
+        android:weightSum="3"
+        app:layout_constraintTop_toBottomOf="@+id/iv_header_background">
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_trees_planted_stat"
+            android:layout_width="0dp"
+            android:layout_height="120dp"
+            android:layout_margin="4dp"
+            android:layout_weight="1"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="1dp"
+            app:strokeWidth="0dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="8dp">
+
+                <ImageView
+                    android:id="@+id/iv_tree_icon"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/ic_tree"/>
+
+                <TextView
+                    android:id="@+id/tv_trees_planted_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="127"
+                    android:textColor="#00A651"
+                    android:textSize="22sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_trees_planted_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="Trees Planted"
+                    android:textColor="#00A651"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_day_streak_stat"
+            android:layout_width="0dp"
+            android:layout_height="120dp"
+            android:layout_margin="4dp"
+            android:layout_weight="1"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="1dp"
+            app:strokeWidth="0dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="8dp">
+
+                <ImageView
+                    android:id="@+id/iv_fire_icon"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/ic_fire"
+                    app:tint="#f97b24"/>
+
+                <TextView
+                    android:id="@+id/tv_day_streak_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="15"
+                    android:textColor="#00A651"
+                    android:textSize="22sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_day_streak_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="Day Streak"
+                    android:textColor="#00A651"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_green_coins_stat"
+            android:layout_width="0dp"
+            android:layout_height="120dp"
+            android:layout_margin="4dp"
+            android:layout_weight="1"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="1dp"
+            app:strokeWidth="0dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="8dp">
+
+                <ImageView
+                    android:id="@+id/iv_leaf_icon"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/ic_leaf"
+                    app:tint="#16a34a"/>
+
+                <TextView
+                    android:id="@+id/tv_green_coins_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="2.5K"
+                    android:textColor="#00A651"
+                    android:textSize="22sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_green_coins_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="Green Coins"
+                    android:textColor="#00A651"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+    </LinearLayout>
+
+    ---
+
+    <LinearLayout
+        android:id="@+id/ll_action_buttons_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:weightSum="4"
+        app:layout_constraintTop_toBottomOf="@+id/ll_stats_container">
+
+        <LinearLayout
+            android:id="@+id/btn_upload_tree"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_upload_tree_icon"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center"
+                app:cardBackgroundColor="@color/gray_300"
+                app:cardCornerRadius="6dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:strokeWidth="0dp">
+
+                <ImageView
+                    android:id="@+id/iv_upload_tree_icon"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_upload"/>
+            </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:id="@+id/tv_upload_tree_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Upload Tree"
+                android:textColor="#00A651"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/btn_my_trees"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_my_trees_icon"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center"
+                app:cardBackgroundColor="@color/gray_300"
+                app:cardCornerRadius="6dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:strokeWidth="0dp">
+
+                <ImageView
+                    android:id="@+id/iv_my_trees_icon"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/my_tree"
+                    app:tint="#008000"/>
+            </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:id="@+id/tv_my_trees_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="My Trees"
+                android:textColor="#00A651"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/btn_leaderboard"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_leaderboard_icon"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center"
+                app:cardBackgroundColor="@color/gray_300"
+                app:cardCornerRadius="6dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:strokeWidth="0dp">
+
+                <ImageView
+                    android:id="@+id/iv_leaderboard_icon"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_trophy"
+                    app:tint="#FFC107"/>
+            </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:id="@+id/tv_leaderboard_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Leaderboard"
+                android:textColor="#00A651"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/btn_store"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_store_icon"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center"
+                app:cardBackgroundColor="@color/gray_300"
+                app:cardCornerRadius="6dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:strokeWidth="0dp">
+
+                <ImageView
+                    android:id="@+id/iv_store_icon"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_store"/>
+            </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:id="@+id/tv_store_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Store"
+                android:textColor="#00A651"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    ---
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card_latest_achievements"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="15dp"
+        android:layout_marginVertical="20dp"
+        android:backgroundTint="@color/white"
+        android:elevation="1dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ll_action_buttons_container"
+        app:strokeWidth="0dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_achievements_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="10dp"
+                android:text="Latest Achievements"
+                android:textColor="#00A651"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <ScrollView
+                android:id="@+id/scroll_view_achievements"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_rounded_white">
+
+                <LinearLayout
+                    android:id="@+id/ll_achievements_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:elevation="4dp"
+                    android:orientation="vertical"
+                    android:padding="15dp">
+
+                    <LinearLayout
+                        android:id="@+id/ll_achievement_item_1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/iv_achievement_medal_1"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:layout_marginEnd="12dp"
+                            android:background="@drawable/bg_circle_yellow"
+                            android:padding="10dp"
+                            android:scaleType="center"
+                            android:src="@drawable/ic_medal"/>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/tv_achievement_title_1"
+                                android:layout_width="200dp"
+                                android:layout_height="20dp"
+                                android:text="Green Guardian"
+                                android:textColor="#00A651"
+                                android:textSize="15sp" />
+
+                            <TextView
+                                android:id="@+id/tv_achievement_description_1"
+                                android:layout_width="200dp"
+                                android:layout_height="20dp"
+                                android:text="Planted 100+ trees"
+                                android:textColor="#00A651"
+                                android:textSize="13sp" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/ll_achievement_item_2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/iv_achievement_medal_2"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:layout_marginEnd="12dp"
+                            android:background="@drawable/bg_circle_yellow"
+                            android:padding="10dp"
+                            android:scaleType="center"
+                            android:src="@drawable/ic_medal"/>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/tv_achievement_title_2"
+                                android:layout_width="200dp"
+                                android:layout_height="20dp"
+                                android:text="Green Guardian"
+                                android:textColor="#00A651"
+                                android:textSize="15sp" />
+
+                            <TextView
+                                android:id="@+id/tv_achievement_description_2"
+                                android:layout_width="200dp"
+                                android:layout_height="20dp"
+                                android:text="Planted 100+ trees"
+                                android:textColor="#00A651"
+                                android:textSize="13sp" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/ll_achievement_item_3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/iv_achievement_medal_3"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:layout_marginEnd="12dp"
+                            android:background="@drawable/bg_circle_yellow"
+                            android:padding="10dp"
+                            android:scaleType="center"
+                            android:src="@drawable/ic_medal"/>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/tv_achievement_title_3"
+                                android:layout_width="200dp"
+                                android:layout_height="20dp"
+                                android:text="Green Guardian"
+                                android:textColor="#00A651"
+                                android:textSize="15sp" />
+
+                            <TextView
+                                android:id="@+id/tv_achievement_description_3"
+                                android:layout_width="200dp"
+                                android:layout_height="20dp"
+                                android:text="Planted 100+ trees"
+                                android:textColor="#00A651"
+                                android:textSize="13sp" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/ll_achievement_item_4"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/iv_achievement_medal_4"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:layout_marginEnd="12dp"
+                            android:background="@drawable/bg_circle_yellow"
+                            android:padding="10dp"
+                            android:scaleType="center"
+                            android:src="@drawable/ic_medal"/>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/tv_achievement_title_4"
+                                android:layout_width="200dp"
+                                android:layout_height="20dp"
+                                android:text="Green Guardian"
+                                android:textColor="#00A651"
+                                android:textSize="15sp" />
+
+                            <TextView
+                                android:id="@+id/tv_achievement_description_4"
+                                android:layout_width="200dp"
+                                android:layout_height="20dp"
+                                android:text="Planted 100+ trees"
+                                android:textColor="#00A651"
+                                android:textSize="13sp" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/ll_achievement_item_5"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/iv_achievement_medal_5"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:layout_marginEnd="12dp"
+                            android:background="@drawable/bg_circle_yellow"
+                            android:padding="10dp"
+                            android:scaleType="center"
+                            android:src="@drawable/ic_medal"/>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/tv_achievement_title_5"
+                                android:layout_width="200dp"
+                                android:layout_height="20dp"
+                                android:text="Green Guardian"
+                                android:textColor="#00A651"
+                                android:textSize="15sp" />
+
+                            <TextView
+                                android:id="@+id/tv_achievement_description_5"
+                                android:layout_width="200dp"
+                                android:layout_height="20dp"
+                                android:text="Planted 100+ trees"
+                                android:textColor="#00A651"
+                                android:textSize="13sp" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/ll_achievement_item_6"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/iv_achievement_medal_6"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:layout_marginEnd="12dp"
+                            android:background="@drawable/bg_circle_yellow"
+                            android:padding="10dp"
+                            android:scaleType="center"
+                            android:src="@drawable/ic_medal" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/tv_achievement_title_6"
+                                android:layout_width="200dp"
+                                android:layout_height="20dp"
+                                android:text="Green Guardian"
+                                android:textColor="#00A651"
+                                android:textSize="15sp" />
+
+                            <TextView
+                                android:id="@+id/tv_achievement_description_6"
+                                android:layout_width="200dp"
+                                android:layout_height="20dp"
+                                android:text="Planted 100+ trees"
+                                android:textColor="#00A651"
+                                android:textSize="13sp" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/ll_achievement_item_7"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/iv_achievement_medal_7"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:layout_marginEnd="12dp"
+                            android:background="@drawable/bg_circle_yellow"
+                            android:padding="10dp"
+                            android:scaleType="center"
+                            android:src="@drawable/ic_medal"/>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/tv_achievement_title_7"
+                                android:layout_width="200dp"
+                                android:layout_height="20dp"
+                                android:text="Green Guardian"
+                                android:textColor="#00A651"
+                                android:textSize="15sp" />
+
+                            <TextView
+                                android:id="@+id/tv_achievement_description_7"
+                                android:layout_width="200dp"
+                                android:layout_height="20dp"
+                                android:text="Planted 100+ trees"
+                                android:textColor="#00A651"
+                                android:textSize="13sp" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/ll_achievement_item_8"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/iv_achievement_star_8"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:layout_marginEnd="12dp"
+                            android:background="@drawable/bg_circle_blue"
+                            android:padding="10dp"
+                            android:scaleType="center"
+                            android:src="@drawable/ic_star" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/tv_achievement_title_8"
+                                android:layout_width="200dp"
+                                android:layout_height="20dp"
+                                android:text="Streak Master"
+                                android:textColor="#00A651"
+                                android:textSize="15sp" />
+
+                            <TextView
+                                android:id="@+id/tv_achievement_description_8"
+                                android:layout_width="200dp"
+                                android:layout_height="20dp"
+                                android:text="10 days continuous planting"
+                                android:textColor="#00A651"
+                                android:textSize="13sp" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                </LinearLayout>
+            </ScrollView>
+
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

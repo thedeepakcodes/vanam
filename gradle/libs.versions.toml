@@ -19,6 +19,8 @@ activity = "1.10.1"
 constraintlayout = "2.2.1"
 gridlayout = "1.0.0"
 playServicesLocation = "21.3.0"
+gridlayoutVersion = "1.1.0"
+shimmer = "0.5.0"
 
 [libraries]
 android-country-picker = { module = "com.hbb20:android-country-picker", version.ref = "androidCountryPicker" }
@@ -42,6 +44,8 @@ androidx-activity = { group = "androidx.activity", name = "activity", version.re
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 androidx-gridlayout = { group = "androidx.gridlayout", name = "gridlayout", version.ref = "gridlayout" }
 play-services-location = { module = "com.google.android.gms:play-services-location", version.ref = "playServicesLocation" }
+gridlayout = { group = "androidx.gridlayout", name = "gridlayout", version.ref = "gridlayoutVersion" }
+shimmer = { module = "com.facebook.shimmer:shimmer", version.ref = "shimmer" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

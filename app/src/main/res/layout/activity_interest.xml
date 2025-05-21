@@ -1,373 +1,377 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/interestsLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#E6FFF2"
     android:fitsSystemWindows="true"
     tools:context=".profile.InterestActivity">
-
-    <!-- Title -->
-    <TextView
-        android:id="@+id/titleText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Interests"
-        android:textSize="22sp"
-        android:textStyle="bold"
-        android:textColor="@color/black"
-        android:layout_margin="16dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
-
-    <!-- Subtitle -->
-    <TextView
-        android:id="@+id/subtitleText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="Select Your Tree Preferences"
-        android:textSize="14sp"
-        android:textColor="@color/black"
-        app:layout_constraintTop_toBottomOf="@id/titleText"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
-
-    <!-- Progress bar -->
-    <ProgressBar
-        android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="0dp"
-        android:layout_height="6dp"
-        android:layout_marginTop="22dp"
-        android:layout_marginHorizontal="20dp"
-        android:progress="50"
-        android:progressTint="#000000"
-        android:progressBackgroundTint="#E9CDED"
-        app:layout_constraintTop_toBottomOf="@id/subtitleText"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <!-- Step indicator -->
-    <TextView
-        android:id="@+id/stepLevel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Step 2 of 4"
-        android:textSize="12sp"
-        android:textColor="@color/black"
-        android:layout_marginTop="12dp"
-        android:layout_marginStart="30dp"
-        app:layout_constraintTop_toBottomOf="@id/progressBar"
-        app:layout_constraintStart_toStartOf="parent"/>
-
-    <!-- Grid of Interests -->
-    <androidx.gridlayout.widget.GridLayout
-        android:id="@+id/interestGrid"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:padding="8dp"
-        android:layout_marginTop="10dp"
-        app:columnCount="2"
-        app:alignmentMode="alignMargins"
-        app:layout_constraintTop_toBottomOf="@id/stepLevel"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginHorizontal="10dp">
-
-        <!-- Fruit Trees -->
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/cardFruitTrees"
-            android:layout_width="0dp"
-            android:layout_height="100dp"
-            android:layout_margin="8dp"
-            app:strokeColor="#CCEBD7"
-            app:cardBackgroundColor="#E6FFF2"
-            android:clickable="true"
-            android:focusable="true"
-            app:strokeWidth="1dp"
-            app:cardCornerRadius="12dp"
-            app:layout_columnWeight="1">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:gravity="center">
-
-                <ImageView
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:src="@drawable/small_single_leaf" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Fruit Trees"
-                    android:textStyle="bold"
-                    android:textColor="@color/black"
-                    android:layout_marginTop="4dp"/>
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <!-- Fast Growing -->
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/cardFastGrowing"
-            android:layout_width="0dp"
-            android:layout_height="100dp"
-            android:layout_margin="8dp"
-            app:strokeColor="#CCEBD7"
-            android:clickable="true"
-            android:focusable="true"
-            app:cardBackgroundColor="#E6FFF2"
-            app:strokeWidth="1dp"
-            app:cardCornerRadius="12dp"
-            app:layout_columnWeight="1">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:gravity="center">
-
-                <ImageView
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:src="@drawable/fast_growing" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Fast Growing"
-                    android:textStyle="bold"
-                    android:textColor="@color/black"
-                    android:layout_marginTop="4dp"/>
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <!-- Shade Trees -->
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/cardShadeTrees"
-            android:layout_width="0dp"
-            android:layout_height="100dp"
-            android:layout_margin="8dp"
-            app:strokeColor="#CCEBD7"
-            android:clickable="true"
-            android:focusable="true"
-            app:cardBackgroundColor="#E6FFF2"
-            app:strokeWidth="1dp"
-            app:cardCornerRadius="12dp"
-            app:layout_columnWeight="1">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:gravity="center">
-
-                <ImageView
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:src="@drawable/shade_trees" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Shade Trees"
-                    android:textStyle="bold"
-                    android:textColor="@color/black"
-                    android:layout_marginTop="4dp"/>
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <!-- Additional Card: Medicinal Trees -->
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/cardMedicinalTrees"
-            android:layout_width="0dp"
-            android:layout_height="100dp"
-            android:layout_margin="8dp"
-            android:clickable="true"
-            android:focusable="true"
-            app:strokeColor="#CCEBD7"
-            app:cardBackgroundColor="#E6FFF2"
-            app:strokeWidth="1dp"
-            app:cardCornerRadius="12dp"
-            app:layout_columnWeight="1">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:gravity="center">
-
-                <ImageView
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:src="@drawable/ic_medicine" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Medicinal Trees"
-                    android:textStyle="bold"
-                    android:textColor="@color/black"
-                    android:layout_marginTop="4dp"/>
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-    </androidx.gridlayout.widget.GridLayout>
-
-    <!-- Planting Season -->
-    <TextView
-        android:id="@+id/plantingSeasonLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Planting Season"
-        android:textColor="@color/black"
-        android:textStyle="bold"
-        android:layout_marginTop="15dp"
-        android:layout_marginStart="30dp"
-        app:layout_constraintTop_toBottomOf="@id/interestGrid"
-        app:layout_constraintStart_toStartOf="parent"/>
-
-    <!-- Planting Season Buttons -->
-    <GridLayout
-        android:id="@+id/plantingSeasonGrid"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:columnCount="2"
-        android:useDefaultMargins="true"
-        android:layout_marginTop="8dp"
-        android:paddingHorizontal="20dp"
-        app:layout_constraintTop_toBottomOf="@id/plantingSeasonLabel">
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnSpring"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_columnWeight="1"
-            android:text="Spring"
-            android:textColor="@color/black"
-            app:strokeColor="#CCEBD7"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnSummer"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_columnWeight="1"
-            android:text="Summer"
-            app:strokeColor="#CCEBD7"
-            android:textColor="@color/black"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnFall"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_columnWeight="1"
-            android:text="Fall"
-            app:strokeColor="#CCEBD7"
-            android:textColor="@color/black"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnWinter"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_columnWeight="1"
-            android:text="Winter"
-            app:strokeColor="#CCEBD7"
-            android:textColor="@color/black"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
-    </GridLayout>
-
-    <!-- Experience Level -->
-    <TextView
-        android:id="@+id/experienceLevelLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Experience Level"
-        android:textSize="14sp"
-        android:textColor="@color/black"
-        android:layout_marginTop="15dp"
-        android:textStyle="bold"
-        android:layout_marginStart="30dp"
-        app:layout_constraintTop_toBottomOf="@id/plantingSeasonGrid"
-        app:layout_constraintStart_toStartOf="parent"/>
-
-    <!-- Seekbar -->
-    <LinearLayout
-        android:id="@+id/experienceLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="#E6FFF0"
-        android:padding="16dp"
-        android:gravity="center_vertical"
-        app:layout_constraintTop_toBottomOf="@id/experienceLevelLabel">
-
-        <SeekBar
-            android:id="@+id/seekBarExperience"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:max="5"
-            android:progress="0"
-            android:progressTint="#2196F3"
-            android:thumbTint="#2196F3"
-            android:progressBackgroundTint="#DDD" />
+        android:layout_height="match_parent"
+        android:background="#E6FFF2">
 
         <TextView
-            android:id="@+id/textExperienceValue"
+            android:id="@+id/titleText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="0/5"
+            android:layout_margin="16dp"
+            android:text="Interests"
             android:textColor="@color/black"
-            android:textSize="16sp"
-            android:layout_marginStart="8dp"/>
-    </LinearLayout>
+            android:textSize="22sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Next Button -->
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/save_continue_button_card_view"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:cardCornerRadius="12dp"
-        app:cardBackgroundColor="@android:color/black"
-        android:layout_marginVertical="30dp"
-        android:layout_marginHorizontal="20dp"
-        app:layout_constraintTop_toBottomOf="@+id/experienceLayout"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        <!-- Subtitle -->
+        <TextView
+            android:id="@+id/subtitleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Select Your Tree Preferences"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/titleText" />
 
-        <LinearLayout
-            android:id="@+id/saveContinue"
+        <!-- Progress bar -->
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="0dp"
+            android:layout_height="6dp"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="22dp"
+            android:progress="50"
+            android:progressBackgroundTint="#E9CDED"
+            android:progressTint="#000000"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/subtitleText" />
+
+        <!-- Step indicator -->
+        <TextView
+            android:id="@+id/stepLevel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="12dp"
+            android:text="Step 2 of 4"
+            android:textColor="@color/black"
+            android:textSize="12sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/progressBar" />
+
+        <!-- Grid of Interests -->
+        <androidx.gridlayout.widget.GridLayout
+            android:id="@+id/interestGrid"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginTop="10dp"
+            android:padding="8dp"
+            app:alignmentMode="alignMargins"
+            app:columnCount="2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/stepLevel">
+
+            <!-- Fruit Trees -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardFruitTrees"
+                android:layout_width="0dp"
+                android:layout_height="100dp"
+                android:layout_margin="8dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:cardBackgroundColor="#E6FFF2"
+                app:cardCornerRadius="12dp"
+                app:layout_columnWeight="1"
+                app:strokeColor="#CCEBD7"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:src="@drawable/small_single_leaf" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="Fruit Trees"
+                        android:textColor="@color/black"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Fast Growing -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardFastGrowing"
+                android:layout_width="0dp"
+                android:layout_height="100dp"
+                android:layout_margin="8dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:cardBackgroundColor="#E6FFF2"
+                app:cardCornerRadius="12dp"
+                app:layout_columnWeight="1"
+                app:strokeColor="#CCEBD7"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:src="@drawable/fast_growing" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="Fast Growing"
+                        android:textColor="@color/black"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Shade Trees -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardShadeTrees"
+                android:layout_width="0dp"
+                android:layout_height="100dp"
+                android:layout_margin="8dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:cardBackgroundColor="#E6FFF2"
+                app:cardCornerRadius="12dp"
+                app:layout_columnWeight="1"
+                app:strokeColor="#CCEBD7"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:src="@drawable/shade_trees" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="Shade Trees"
+                        android:textColor="@color/black"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Additional Card: Medicinal Trees -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardMedicinalTrees"
+                android:layout_width="0dp"
+                android:layout_height="100dp"
+                android:layout_margin="8dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:cardBackgroundColor="#E6FFF2"
+                app:cardCornerRadius="12dp"
+                app:layout_columnWeight="1"
+                app:strokeColor="#CCEBD7"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:src="@drawable/ic_medicine" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="Medicinal Trees"
+                        android:textColor="@color/black"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+        </androidx.gridlayout.widget.GridLayout>
+
+        <!-- Planting Season -->
+        <TextView
+            android:id="@+id/plantingSeasonLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="15dp"
+            android:text="Planting Season"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/interestGrid" />
+
+        <!-- Planting Season Buttons -->
+        <GridLayout
+            android:id="@+id/plantingSeasonGrid"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:padding="14dp">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:columnCount="2"
+            android:paddingHorizontal="20dp"
+            android:useDefaultMargins="true"
+            app:layout_constraintTop_toBottomOf="@id/plantingSeasonLabel">
 
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginTop="2dp"
-                android:src="@drawable/ic_leaf"
-                app:tint="@android:color/white" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSpring"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:text="Spring"
+                android:textColor="@color/black"
+                app:strokeColor="#CCEBD7" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSummer"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:text="Summer"
+                android:textColor="@color/black"
+                app:strokeColor="#CCEBD7" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnFall"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:text="Fall"
+                android:textColor="@color/black"
+                app:strokeColor="#CCEBD7" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnWinter"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:text="Winter"
+                android:textColor="@color/black"
+                app:strokeColor="#CCEBD7" />
+        </GridLayout>
+
+        <!-- Experience Level -->
+        <TextView
+            android:id="@+id/experienceLevelLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="15dp"
+            android:text="Experience Level"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/plantingSeasonGrid" />
+
+        <!-- Seekbar -->
+        <LinearLayout
+            android:id="@+id/experienceLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#E6FFF0"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="16dp"
+            app:layout_constraintTop_toBottomOf="@id/experienceLevelLabel">
+
+            <SeekBar
+                android:id="@+id/seekBarExperience"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:max="5"
+                android:progress="0"
+                android:progressBackgroundTint="#DDD"
+                android:progressTint="#2196F3"
+                android:thumbTint="#2196F3" />
 
             <TextView
+                android:id="@+id/textExperienceValue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Save &amp; Continue"
-                android:textColor="@android:color/white"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
+                android:layout_marginStart="8dp"
+                android:text="0/5"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
         </LinearLayout>
 
-    </com.google.android.material.card.MaterialCardView>
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <!-- Next Button -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/save_continue_button_card_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginVertical="30dp"
+            app:cardBackgroundColor="@android:color/black"
+            app:cardCornerRadius="12dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/experienceLayout">
+
+            <LinearLayout
+                android:id="@+id/saveContinue"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="14dp">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginEnd="8dp"
+                    android:src="@drawable/ic_leaf"
+                    app:tint="@android:color/white" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Save &amp; Continue"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
