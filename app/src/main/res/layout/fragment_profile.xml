@@ -6,8 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".fragments.Profile">
 
-    <!-- TODO: Update blank fragment layout -->
-
     <ImageView
         android:id="@+id/headerImage"
         android:layout_width="match_parent"
@@ -217,6 +215,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/Achievements_bar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
@@ -301,143 +300,157 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <LinearLayout
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_Activity_history"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:weightSum="4">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Activity History"
-                    android:textStyle="bold"
-                    android:textColor="#00A651">
-                </TextView>
+                android:layout_marginTop="20dp"
+                android:backgroundTint="@color/white"
+                android:elevation="1dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/Achievements_bar"
+                app:strokeWidth="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:backgroundTint="@color/white"
-                    android:layout_marginTop="5dp">
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
 
-                    <LinearLayout
+                    <TextView
+                        android:id="@+id/History_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Activity History"
+                        android:textColor="#00A651"
+                        android:padding="16dp"
+                        android:textStyle="bold" />
+
+                    <ScrollView
+                        android:id="@+id/scroll_view_achievements"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal"
-                        android:background="@color/white"
-                        android:weightSum="2"
-                        android:padding="5dp">
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_rounded_white">
 
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/ic_bell"
-                            app:tint="#00A651">
-                        </ImageView>
                         <LinearLayout
+                            android:id="@+id/ll_History_list"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:weightSum="2">
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Planted Peepal Tree"
-                                android:textStyle="bold"
-                                android:textColor="#00A651"/>
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Yesterday at Mumbai Green Park"
-                                android:textColor="#00A651"/>
-                        </LinearLayout>
-                    </LinearLayout>
-                </LinearLayout>
+                            android:elevation="4dp"
+                            android:orientation="vertical">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:backgroundTint="@color/white"
-                    android:layout_marginTop="5dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal"
-                        android:weightSum="2"
-                        android:background="@color/white"
-                        android:padding="5dp">
-
-                        <ImageView
-                            android:layout_width="25dp"
-                            android:layout_height="20dp"
-                            android:src="@drawable/ic_community"
-                            app:tint="#00A651">
-                        </ImageView>
                         <LinearLayout
+                            android:id="@+id/ll_History_item_1"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:weightSum="2">
-                            <TextView
+                            android:layout_marginBottom="16dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <ImageView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Joined Clean Earth Campaign"
-                                android:textStyle="bold"
-                                android:textColor="#00A651"/>
-                            <TextView
-                                android:layout_width="wrap_content"
+                                android:padding="10dp"
+                                android:src="@drawable/ic_bell"
+                                app:tint="#00A651" />
+
+                            <LinearLayout
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:text="3 days ago"
-                                android:textColor="#00A651"/>
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Planted Peepal Tree"
+                                    android:textStyle="bold"
+                                    android:textColor="#00A651"/>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Yesterday at Mumbai Green Park"
+                                    android:textColor="#00A651"/>
+                            </LinearLayout>
                         </LinearLayout>
-                    </LinearLayout>
-                </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:backgroundTint="@color/white"
-                    android:layout_marginTop="5dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal"
-                        android:background="@color/white"
-                        android:weightSum="2"
-                        android:padding="5dp">
-
-                        <ImageView
-                            android:layout_width="25dp"
-                            android:layout_height="20dp"
-                            android:src="@drawable/ic_settings"
-                            app:tint="#00A651">
-                        </ImageView>
                         <LinearLayout
+                            android:id="@+id/ll_History_item_2"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:weightSum="2">
-                            <TextView
+                            android:layout_marginBottom="16dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <ImageView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Settings"
-                                android:textStyle="bold"
-                                android:textColor="#00A651"/>
-                            <TextView
-                                android:layout_width="wrap_content"
+                                android:padding="10dp"
+                                android:src="@drawable/ic_community"
+                                app:tint="#00A651" />
+
+                            <LinearLayout
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:text="5 days ago"
-                                android:textColor="#00A651"/>
+                                android:layout_weight="1"
+                                android:orientation="vertical" >
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Joined Clean Earth Campaign"
+                                    android:textStyle="bold"
+                                    android:textColor="#00A651"/>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="3 days ago"
+                                    android:textColor="#00A651"/>
+
+                            </LinearLayout>
                         </LinearLayout>
-                    </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/ll_History_item_3"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="16dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:padding="10dp"
+                                android:src="@drawable/ic_settings"
+                                app:tint="#00A651" />
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical" >
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Settings"
+                                    android:textStyle="bold"
+                                    android:textColor="#00A651"/>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="5 days ago"
+                                    android:textColor="#00A651"/>
+
+                            </LinearLayout>
+                        </LinearLayout>
+                        </LinearLayout>
+                    </ScrollView>
                 </LinearLayout>
-            </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
         </LinearLayout>
     </ScrollView>
-
-
-
 </FrameLayout>
