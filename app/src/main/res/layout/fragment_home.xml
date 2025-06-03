@@ -9,7 +9,7 @@
 
     <ImageView
         android:id="@+id/iv_header_background"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="220dp"
         android:scaleType="centerCrop"
         android:src="@drawable/forest_bg"
