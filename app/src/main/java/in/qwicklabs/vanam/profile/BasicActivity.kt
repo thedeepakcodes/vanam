@@ -107,6 +107,7 @@ class BasicActivity : AppCompatActivity() {
     private fun setupSaveContinueButton() {
         binding.saveContinue.setOnClickListener {
             val fullName = binding.fullName.text.toString().trim()
+            val userName = binding.username.text.toString().trim()
             val bio = binding.bioText.text.toString().trim()
             val country = binding.countrySpinner.selectedItem.toString()
             val plantingGoal = binding.plantingGoal.text.toString().toIntOrNull() ?: 0
@@ -132,7 +133,8 @@ class BasicActivity : AppCompatActivity() {
 
             val email = FirebaseAuth.getInstance().currentUser?.email
             val username = email?.split("@")?.firstOrNull() ?: "Guest"
-            changedFields["username"] = username
+
+            if (old["username"] != userName) changedFields["username"] = username
 
             if (isImageSelected) {
                 loader.title.text = "Uploading..."
@@ -210,9 +212,11 @@ class BasicActivity : AppCompatActivity() {
             val user = FirebaseAuth.getInstance().currentUser
             val name = document.getString("name") ?: user?.displayName.toString()
             val profileImage = document.getString("profileImage") ?: user?.photoUrl.toString()
+            val username = document.getString("username") ?: user?.email?.split("@")?.firstOrNull()
 
             binding.fullName.setText(name)
             binding.bioText.setText(document.getString("bio"))
+            binding.username.setText(username)
 
             Glide.with(this)
                 .load(profileImage)
