@@ -130,6 +130,10 @@ class BasicActivity : AppCompatActivity() {
             if ((old["plantingGoal"] as? Long)?.toInt() != plantingGoal) changedFields["plantingGoal"] =
                 plantingGoal
 
+            val email = FirebaseAuth.getInstance().currentUser?.email
+            val username = email?.split("@")?.firstOrNull() ?: "Guest"
+            changedFields["username"] = username
+
             if (isImageSelected) {
                 loader.title.text = "Uploading..."
                 loader.message.text = "Uploading new profile image..."
@@ -201,37 +205,33 @@ class BasicActivity : AppCompatActivity() {
         loader.dialog.show()
 
         userCollection.document(uid).get().addOnSuccessListener { document ->
-            if (document.exists()) {
-                existingProfileData = document.data
+            existingProfileData = document.data
 
-                document.getString("name")?.let {
-                    binding.fullName.setText(it)
-                }
+            val user = FirebaseAuth.getInstance().currentUser
+            val name = document.getString("name") ?: user?.displayName.toString()
+            val profileImage = document.getString("profileImage") ?: user?.photoUrl.toString()
 
-                document.getString("bio")?.let {
-                    binding.bioText.setText(it)
-                }
+            binding.fullName.setText(name)
+            binding.bioText.setText(document.getString("bio"))
 
-                document.getString("country")?.let { country ->
-                    val countries = resources.getStringArray(R.array.country_list)
-                    val index = countries.indexOf(country)
-                    if (index >= 0) {
-                        binding.countrySpinner.setSelection(index)
-                    }
-                }
+            Glide.with(this)
+                .load(profileImage)
+                .placeholder(R.drawable.profile_sample)
+                .into(binding.profileImageView)
+            isImageSelected = false
+            binding.imageChooserIcon.visibility = View.GONE
 
-                val plantingGoal = document.getLong("plantingGoal")?.toInt() ?: 1
-                binding.plantingGoal.text = plantingGoal.toString()
-
-                document.getString("profileImage")?.let { imageUrl ->
-                    Glide.with(this)
-                        .load(imageUrl)
-                        .placeholder(R.drawable.profile_sample)
-                        .into(binding.profileImageView)
-                    isImageSelected = false
-                    binding.imageChooserIcon.visibility = View.GONE
+            document.getString("country")?.let { country ->
+                val countries = resources.getStringArray(R.array.country_list)
+                val index = countries.indexOf(country)
+                if (index >= 0) {
+                    binding.countrySpinner.setSelection(index)
                 }
             }
+
+            val plantingGoal = document.getLong("plantingGoal")?.toInt() ?: 1
+            binding.plantingGoal.text = plantingGoal.toString()
+
             loader.dialog.dismiss()
         }.addOnFailureListener {
             loader.dialog.dismiss()

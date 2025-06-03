@@ -2,8 +2,8 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
     android:id="@+id/main"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragments.Home">
 
@@ -15,11 +15,11 @@
         android:src="@drawable/forest_bg"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <View
         android:id="@+id/view_header_overlay"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="220dp"
         android:background="@drawable/header_gradient_overlay"
         app:layout_constraintEnd_toEndOf="@id/iv_header_background"
@@ -43,7 +43,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            android:src="@drawable/circular_loader"/>
+            android:src="@drawable/circular_loader" />
     </LinearLayout>
 
     <LinearLayout
@@ -96,7 +96,7 @@
             android:layout_height="20dp"
             android:layout_centerInParent="true"
             android:src="@drawable/ic_bell"
-            app:tint="#4b5563"/>
+            app:tint="#4b5563" />
 
     </RelativeLayout>
 
@@ -133,7 +133,7 @@
                     android:id="@+id/iv_tree_icon"
                     android:layout_width="32dp"
                     android:layout_height="32dp"
-                    android:src="@drawable/ic_tree"/>
+                    android:src="@drawable/ic_tree" />
 
                 <TextView
                     android:id="@+id/tv_trees_planted_count"
@@ -180,7 +180,7 @@
                     android:layout_width="32dp"
                     android:layout_height="32dp"
                     android:src="@drawable/ic_fire"
-                    app:tint="#f97b24"/>
+                    app:tint="#f97b24" />
 
                 <TextView
                     android:id="@+id/tv_day_streak_count"
@@ -227,7 +227,7 @@
                     android:layout_width="32dp"
                     android:layout_height="32dp"
                     android:src="@drawable/ic_leaf"
-                    app:tint="#16a34a"/>
+                    app:tint="#16a34a" />
 
                 <TextView
                     android:id="@+id/tv_green_coins_count"
@@ -280,10 +280,10 @@
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:layout_gravity="center"
-                app:cardBackgroundColor="@color/gray_300"
-                app:cardCornerRadius="6dp"
                 android:clickable="true"
                 android:focusable="true"
+                app:cardBackgroundColor="@color/gray_300"
+                app:cardCornerRadius="6dp"
                 app:strokeWidth="0dp">
 
                 <ImageView
@@ -291,7 +291,7 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_gravity="center"
-                    android:src="@drawable/ic_upload"/>
+                    android:src="@drawable/ic_upload" />
             </com.google.android.material.card.MaterialCardView>
 
             <TextView
@@ -320,10 +320,10 @@
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:layout_gravity="center"
-                app:cardBackgroundColor="@color/gray_300"
-                app:cardCornerRadius="6dp"
                 android:clickable="true"
                 android:focusable="true"
+                app:cardBackgroundColor="@color/gray_300"
+                app:cardCornerRadius="6dp"
                 app:strokeWidth="0dp">
 
                 <ImageView
@@ -332,7 +332,7 @@
                     android:layout_height="24dp"
                     android:layout_gravity="center"
                     android:src="@drawable/my_tree"
-                    app:tint="#008000"/>
+                    app:tint="#008000" />
             </com.google.android.material.card.MaterialCardView>
 
             <TextView
@@ -361,10 +361,10 @@
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:layout_gravity="center"
-                app:cardBackgroundColor="@color/gray_300"
-                app:cardCornerRadius="6dp"
                 android:clickable="true"
                 android:focusable="true"
+                app:cardBackgroundColor="@color/gray_300"
+                app:cardCornerRadius="6dp"
                 app:strokeWidth="0dp">
 
                 <ImageView
@@ -373,7 +373,7 @@
                     android:layout_height="24dp"
                     android:layout_gravity="center"
                     android:src="@drawable/ic_trophy"
-                    app:tint="#FFC107"/>
+                    app:tint="#FFC107" />
             </com.google.android.material.card.MaterialCardView>
 
             <TextView
@@ -402,10 +402,10 @@
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:layout_gravity="center"
-                app:cardBackgroundColor="@color/gray_300"
-                app:cardCornerRadius="6dp"
                 android:clickable="true"
                 android:focusable="true"
+                app:cardBackgroundColor="@color/gray_300"
+                app:cardCornerRadius="6dp"
                 app:strokeWidth="0dp">
 
                 <ImageView
@@ -413,7 +413,7 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_gravity="center"
-                    android:src="@drawable/ic_store"/>
+                    android:src="@drawable/ic_store" />
             </com.google.android.material.card.MaterialCardView>
 
             <TextView
@@ -492,7 +492,7 @@
                             android:background="@drawable/bg_circle_yellow"
                             android:padding="10dp"
                             android:scaleType="center"
-                            android:src="@drawable/ic_medal"/>
+                            android:src="@drawable/ic_medal" />
 
                         <LinearLayout
                             android:layout_width="0dp"
@@ -534,7 +534,7 @@
                             android:background="@drawable/bg_circle_yellow"
                             android:padding="10dp"
                             android:scaleType="center"
-                            android:src="@drawable/ic_medal"/>
+                            android:src="@drawable/ic_medal" />
 
                         <LinearLayout
                             android:layout_width="0dp"
@@ -576,7 +576,7 @@
                             android:background="@drawable/bg_circle_yellow"
                             android:padding="10dp"
                             android:scaleType="center"
-                            android:src="@drawable/ic_medal"/>
+                            android:src="@drawable/ic_medal" />
 
                         <LinearLayout
                             android:layout_width="0dp"
@@ -618,7 +618,7 @@
                             android:background="@drawable/bg_circle_yellow"
                             android:padding="10dp"
                             android:scaleType="center"
-                            android:src="@drawable/ic_medal"/>
+                            android:src="@drawable/ic_medal" />
 
                         <LinearLayout
                             android:layout_width="0dp"
@@ -660,7 +660,7 @@
                             android:background="@drawable/bg_circle_yellow"
                             android:padding="10dp"
                             android:scaleType="center"
-                            android:src="@drawable/ic_medal"/>
+                            android:src="@drawable/ic_medal" />
 
                         <LinearLayout
                             android:layout_width="0dp"
@@ -744,7 +744,7 @@
                             android:background="@drawable/bg_circle_yellow"
                             android:padding="10dp"
                             android:scaleType="center"
-                            android:src="@drawable/ic_medal"/>
+                            android:src="@drawable/ic_medal" />
 
                         <LinearLayout
                             android:layout_width="0dp"

@@ -1,6 +1,7 @@
 package `in`.qwicklabs.vanam.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,13 +20,10 @@ class Home : Fragment() {
 
     private val auth: FirebaseAuth by lazy { FirebaseAuth.getInstance() }
     private val firestore: FirebaseFirestore by lazy { FirebaseFirestore.getInstance() }
-
-    private val userId: String?
-        get() = auth.currentUser?.uid
+    private val userId: String? get() = auth.currentUser?.uid
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.root
@@ -39,43 +37,50 @@ class Home : Fragment() {
         if (auth.currentUser != null) {
             fetchUserData()
         } else {
-            binding.tvUserFirstName.text = "Guest"
+            showGuestUser()
         }
     }
 
     private fun fetchUserData() {
-        userId?.let { uid ->
-            firestore.collection("Vanam")
-                .document("Users")
-                .collection("Profile")
-                .document(uid)
-        }?.get()
-            ?.addOnSuccessListener { document ->
-                val userName = document?.getString("name")
-                val profilePic =
-                    document?.getString("profileImage") ?: auth.currentUser?.photoUrl.toString()
+        val uid = userId ?: return showGuestUser()
 
-                binding.tvUserFirstName.text = when {
-                    !userName.isNullOrEmpty() -> userName
-                    !auth.currentUser?.displayName.isNullOrEmpty() ->
-                        auth.currentUser?.displayName?.split(" ")?.firstOrNull() ?: "Guest"
+        firestore.collection("Vanam")
+            .document("Users")
+            .collection("Profile")
+            .document(uid)
+            .get()
+            .addOnSuccessListener { document ->
+                if (document != null && document.exists()) {
+                    val name = document.getString("name")
+                    val profilePic = document.getString("profileImage")
+                        ?: auth.currentUser?.photoUrl.toString()
 
-                    else -> "Guest"
+                    val firstName = name?.takeIf { it.isNotBlank() }
+                        ?: auth.currentUser?.displayName?.split(" ")?.firstOrNull()
+                        ?: "Guest"
+
+                    binding.tvUserFirstName.text = firstName
+
+                    Glide.with(requireContext())
+                        .load(profilePic)
+                        .placeholder(R.drawable.circular_loader)
+                        .error(R.drawable.profile_sample)
+                        .circleCrop()
+                        .into(binding.ivProfilePicture)
+                } else {
+                    showGuestUser()
+                    Log.w("HomeFragment", "User profile document does not exist.")
                 }
-
-                Glide.with(requireContext())
-                    .load(profilePic)
-                    .placeholder(R.drawable.circular_loader)
-                    .error(R.drawable.profile_sample)
-                    .circleCrop()
-                    .into(binding.ivProfilePicture)
             }
-
-            ?.addOnFailureListener {
-                binding.tvUserFirstName.text = "Guest"
+            .addOnFailureListener { e ->
+                showGuestUser()
+                Log.e("HomeFragment", "Failed to fetch user data", e)
             }
     }
 
+    private fun showGuestUser() {
+        binding.tvUserFirstName.text = "Guest"
+    }
 
     private fun getGreetingMessage(): String {
         val hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
