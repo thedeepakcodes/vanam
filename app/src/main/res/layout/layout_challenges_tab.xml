@@ -13,7 +13,7 @@
             android:id="@+id/search_challenges_bar"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:background="@color/white"
+            android:background="@drawable/bg_search"
             android:drawableStart="@drawable/ic_search"
             android:drawablePadding="12dp"
             android:paddingStart="15dp"
