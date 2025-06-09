@@ -1,0 +1,158 @@
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F9FAFB">
+
+    <TextView
+        android:id="@+id/titleLeaderboard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Leaderboard 🏆"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:textColor="#00A651"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_margin="16dp"/>
+
+    <Spinner
+        android:id="@+id/leaderboardFilter"
+        android:layout_width="82dp"
+        android:layout_height="30dp"
+        android:layout_margin="16dp"
+        android:background="@drawable/bg_leaderboard_filter"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/topWinnersLayout"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:orientation="horizontal"
+        android:background="@drawable/bg_winner_items"
+        app:layout_constraintTop_toBottomOf="@id/titleLeaderboard"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
+        android:padding="8dp">
+        <include layout="@layout/item_featured_winner2" />
+        <include layout="@layout/item_featured_winner" />
+        <include layout="@layout/item_featured_winner3" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/Leaderboard_btnLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:weightSum="2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/topWinnersLayout">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnTrees"
+            android:layout_width="155dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:text="Trees Planted"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:textColor="@color/white"
+            android:backgroundTint="#00A651"
+            app:cornerRadius="5dp"
+            android:layout_marginEnd="8dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCoins"
+            android:layout_width="155dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:text="Green Coins"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:textColor="@color/black"
+            android:backgroundTint="@color/white"
+            app:strokeWidth="1dp"
+            app:strokeColor="#00A651"
+            app:cornerRadius="5dp"
+            android:layout_marginStart="8dp" />
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerTrees"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:visibility="visible"
+        android:padding="8dp"
+        android:clipToPadding="false"
+        app:layout_constraintTop_toBottomOf="@id/Leaderboard_btnLayout"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerCoins"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:visibility="gone"
+        android:padding="8dp"
+        android:clipToPadding="false"
+        app:layout_constraintTop_toBottomOf="@id/Leaderboard_btnLayout"/>
+
+    <LinearLayout
+        android:id="@+id/yourRankLayout"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:background="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/profile_sample"
+            android:scaleType="centerCrop"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/profile_circle"/>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:padding="4dp">
+
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="Your Rank: #8"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:textSize="14sp"
+                android:layout_marginBottom="3dp"/>
+
+            <ProgressBar
+                android:layout_width="match_parent"
+                android:layout_height="8dp"
+                android:progress="80"
+                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                android:progressTint="#00A651"
+                android:progressDrawable="@drawable/progress_bar"
+                android:backgroundTint="@android:color/transparent"
+                android:layout_marginBottom="8dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Just 20 Green Coins away from Top 5!"
+                android:textSize="12sp"
+                android:textColor="#6B7280" />
+        </LinearLayout>
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -62,7 +62,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical" >
 
-                <include layout="@layout/item_leaderboard_user" />
+                <include layout="@layout/item_leaderboard_user_of_fragment_community" />
             </LinearLayout>
         </ScrollView>
     </LinearLayout>
