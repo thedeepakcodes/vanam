@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@android:color/white"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/backButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:src="@drawable/ic_arrow_back"
+        android:contentDescription="Back"
+        android:layout_gravity="start" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="24dp">
+
+            <ImageView
+                android:layout_width="180dp"
+                android:layout_height="180dp"
+                android:src="@drawable/img_trophy"
+                android:scaleType="centerCrop"
+                android:layout_marginTop="16dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="You're not on the board yet!"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:textColor="#1F2937"
+                android:layout_marginTop="16dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Plant trees to earn Green Coins and climb the leaderboard."
+                android:textSize="16sp"
+                android:textColor="#4B5563"
+                android:gravity="center"
+                android:layout_marginTop="8dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Plant Now"
+                android:layout_marginTop="12dp"
+                android:textColor="@android:color/white"
+                android:backgroundTint="#22C55E"
+                app:cornerRadius="4dp"/>
+
+            <ImageView
+                android:layout_width="180dp"
+                android:layout_height="180dp"
+                android:src="@drawable/img_coming_soon"
+                android:scaleType="centerCrop"
+                android:layout_marginTop="32dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="No Rewards Yet!"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:textColor="#1F2937"
+                android:layout_marginTop="16dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Start earning Green Coins to unlock exciting eco-rewards."
+                android:textSize="16sp"
+                android:textColor="#4B5563"
+                android:gravity="center"
+                android:layout_marginTop="8dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Earn Green Coins"
+                android:layout_marginTop="12dp"
+                android:textColor="@android:color/white"
+                android:backgroundTint="#22C55E"
+                app:cornerRadius="4dp"/>
+
+            <ImageView
+                android:layout_width="180dp"
+                android:layout_height="180dp"
+                android:src="@drawable/img_all_caught_up"
+                android:scaleType="centerCrop"
+                android:layout_marginTop="32dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="You're All Caught Up!"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:textColor="#1F2937"
+                android:layout_marginTop="16dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="No new notifications. We'll buzz you when something important happens."
+                android:textSize="16sp"
+                android:textColor="#4B5563"
+                android:gravity="center"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

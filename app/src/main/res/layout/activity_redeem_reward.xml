@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/redeem_reward_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/white"
+        android:layout_margin="5dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Redeem Reward 🎁"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:textSize="20dp"
+            android:padding="8dp"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="140dp"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/green_coin_background"
+            android:orientation="horizontal"
+            android:padding="2dp">
+
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_margin="4dp"
+                android:src="@drawable/green_coins_14x14" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2,250"
+                android:textColor="#22C55E"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <ScrollView
+        android:id="@+id/reward_scrollview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/redeem_reward_header">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="16dp">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:src="@drawable/buy_product_img" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@color/white">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_margin="10dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Vanam Bamboo Eco Bottle"
+                        android:textSize="18dp"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:layout_marginEnd="6dp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="#FEE2E2"
+                        android:text="Limited Stock"
+                        android:textColor="#C62828"
+                        android:textSize="12dp"
+                        tools:ignore="TextSizeCheck" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Vanam's premium sustainable bamboo water bottle with vacuum insulation. Keeps drinks cold for 24 hours or hot for 12 hours."
+                    android:textColor="#4B5563"
+                    android:padding="2dp"
+                    android:layout_margin="10dp"/>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:background="@drawable/green_coin_background"
+                    android:padding="2dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginBottom="2dp">
+
+                    <ImageView
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:src="@drawable/green_coins_14x14"
+                        android:layout_marginEnd="4dp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="1,200 coins"
+                        android:textStyle="bold"
+                        android:textColor="#22C55E"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Full Name"
+                android:textColor="@color/black"
+                android:layout_marginTop="14dp"/>
+
+            <EditText
+                android:id="@+id/username"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/edittext_background"
+                android:hint="Enter your full name"
+                android:textColor="@color/black"
+                android:minHeight="48dp"
+                android:padding="12dp"
+                android:layout_marginTop="8dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Email"
+                android:textColor="@color/black"
+                android:layout_marginTop="14dp"/>
+
+            <EditText
+                android:id="@+id/userEmail"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/edittext_background"
+                android:hint="Enter your Email i'd"
+                android:textColor="@color/black"
+                android:minHeight="48dp"
+                android:padding="12dp"
+                android:layout_marginTop="8dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Shipping Address"
+                android:textColor="@color/black"
+                android:layout_marginTop="14dp"/>
+
+            <EditText
+                android:id="@+id/user_shippingAddress"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/edittext_background"
+                android:hint="Enter your address"
+                android:gravity="top"
+                android:textColor="@color/black"
+                android:minHeight="100dp"
+                android:padding="12dp"
+                android:layout_marginTop="8dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Contact Number"
+                android:textColor="@color/black"
+                android:layout_marginTop="14dp"/>
+
+            <EditText
+                android:id="@+id/userContact_no"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/edittext_background"
+                android:hint="Enter your contact number"
+                android:minHeight="48dp"
+                android:padding="12dp"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Special Requests (Optional)"
+                android:textColor="@color/black"
+                android:layout_marginTop="14dp"/>
+
+            <EditText
+                android:id="@+id/optionalTexts"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/edittext_background"
+                android:hint="Any special instructions for delivery?"
+                android:gravity="top"
+                android:textColor="@color/black"
+                android:minHeight="66dp"
+                android:padding="12dp"
+                android:layout_marginTop="8dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="🌿 Small acts, when multiplied by millions of people, can transform the world. – Howard Zinn"
+                android:textColor="#4B5563"
+                android:textSize="15sp"
+                android:layout_marginTop="16dp"
+                android:padding="10dp"/>
+
+            <CheckBox
+                android:id="@+id/checkbox_terms"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="I understand that rewards are non-refundable and delivery may take up to 2 weeks."
+                android:textColor="#4B5563"
+                android:textSize="15sp"
+                android:layout_marginEnd="20dp"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/button_confirm_redemption"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:backgroundTint="#16A34A"
+                android:padding="12dp"
+                android:text="Confirm Redemption"
+                android:textAllCaps="false"
+                android:textColor="#FFFFFF"
+                app:cornerRadius="5dp"
+                app:icon="@drawable/confirm_reward"
+                app:iconGravity="textEnd" />
+        </LinearLayout>
+    </ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:padding="24dp"
+    android:background="#FAFFFC">
+
+    <ImageView
+        android:id="@+id/img_offline"
+        android:layout_width="220dp"
+        android:layout_height="220dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginBottom="24dp"
+        android:src="@drawable/img_offline"
+        android:contentDescription="Offline Image" />
+
+    <TextView
+        android:id="@+id/txt_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="You're Offline!"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:layout_marginBottom="12dp" />
+
+    <TextView
+        android:id="@+id/txt_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Looks like your internet connection is down. Please check your network and try again."
+        android:textSize="16sp"
+        android:textColor="#4B5563"
+        android:gravity="center"
+        android:layout_marginBottom="32dp" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_retry"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="Retry Connection"
+        android:textAllCaps="false"
+        android:textSize="16sp"
+        android:textColor="#FFFFFF"
+        android:backgroundTint="#000000"
+        android:layout_marginBottom="16dp"
+        app:cornerRadius="8dp"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_home"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="Go to Home"
+        android:textAllCaps="false"
+        android:textSize="16sp"
+        android:textColor="#000000"
+        android:background="@drawable/bg_outline_button" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <View
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:layout_margin="4dp"
+            android:background="@drawable/bg_dot_indicator_inactive" />
+
+        <View
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:layout_margin="4dp"
+            android:background="@drawable/bg_dot_indicator_inactive" />
+
+        <View
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:layout_margin="4dp"
+            android:background="@drawable/bg_dot_indicator_inactive" />
+    </LinearLayout>
+</LinearLayout>
