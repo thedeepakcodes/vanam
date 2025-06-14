@@ -29,6 +29,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:background="@drawable/green_coin_background"
+            android:padding="2dp"
             android:layout_marginStart="140dp"
             android:layout_marginTop="12dp">
 
