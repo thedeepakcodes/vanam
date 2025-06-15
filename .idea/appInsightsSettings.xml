@@ -9,10 +9,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="in.qwicklabs.vanam" />
+                  <option name="mobileSdkAppId" value="1:43645631763:android:8ad21cdfcc08551414eee6" />
+                  <option name="projectId" value="jaypee-rentals" />
+                  <option name="projectNumber" value="43645631763" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />
