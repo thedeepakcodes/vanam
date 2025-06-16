@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -190,13 +191,14 @@
                             android:id="@+id/itemRedeemBtn"
                             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_height="40dp"
+                            android:layout_marginStart="8dp"
                             android:layout_weight="1"
                             android:text="Redeem"
+                            android:textColor="@android:color/white"
                             android:textSize="14sp"
-                            android:layout_marginStart="8dp"
                             app:backgroundTint="#22C55E"
-                            android:textColor="@android:color/white"/>
+                            tools:ignore="TouchTargetSizeCheck" />
                     </LinearLayout>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -256,17 +258,19 @@
                             android:textColor="@color/black"
                             android:textStyle="bold"
                             android:drawablePadding="4dp"/>
+
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/itemRedeemBtn2"
                             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_height="40dp"
+                            android:layout_marginStart="8dp"
                             android:layout_weight="1"
                             android:text="Redeem"
+                            android:textColor="@android:color/white"
                             android:textSize="14sp"
-                            android:layout_marginStart="8dp"
                             app:backgroundTint="#22C55E"
-                            android:textColor="@android:color/white"/>
+                            tools:ignore="TouchTargetSizeCheck" />
                     </LinearLayout>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -330,13 +334,14 @@
                             android:id="@+id/itemRedeemBtn3"
                             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_height="40dp"
+                            android:layout_marginStart="8dp"
                             android:layout_weight="1"
                             android:text="Redeem"
+                            android:textColor="@android:color/white"
                             android:textSize="14sp"
-                            android:layout_marginStart="8dp"
                             app:backgroundTint="#22C55E"
-                            android:textColor="@android:color/white"/>
+                            tools:ignore="TouchTargetSizeCheck" />
                     </LinearLayout>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -367,6 +372,7 @@
                         android:id="@+id/itemSubtitle4"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
                         android:text="Pine Sapling"
                         android:textColor="@color/black"
                         android:textSize="14sp"
@@ -401,13 +407,14 @@
                             android:id="@+id/itemRedeemBtn4"
                             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_height="40dp"
+                            android:layout_marginStart="8dp"
                             android:layout_weight="1"
                             android:text="Redeem"
+                            android:textColor="@android:color/white"
                             android:textSize="14sp"
-                            android:layout_marginStart="8dp"
                             app:backgroundTint="#22C55E"
-                            android:textColor="@android:color/white"/>
+                            tools:ignore="TouchTargetSizeCheck" />
                     </LinearLayout>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
