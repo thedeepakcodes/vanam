@@ -68,7 +68,7 @@
         </androidx.cardview.widget.CardView>
 
         <LinearLayout
-            android:layout_width="443dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="2dp"
             android:layout_marginTop="4dp"
@@ -123,7 +123,7 @@
         </LinearLayout>
 
         <GridLayout
-            android:layout_width="433dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="12dp"
             android:columnCount="2"
@@ -252,7 +252,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:drawablePadding="4dp"
-                            android:text="250"
+                            android:text="500"
                             android:textColor="@color/black"
                             android:textStyle="bold"
                             app:drawableStartCompat="@drawable/green_coins_14x14" />
@@ -322,7 +322,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:drawablePadding="4dp"
-                            android:text="200"
+                            android:text="1000"
                             android:textColor="@color/black"
                             android:textStyle="bold"
                             app:drawableStartCompat="@drawable/green_coins_14x14" />
@@ -393,7 +393,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:drawablePadding="4dp"
-                            android:text="350"
+                            android:text="300"
                             android:textColor="@color/black"
                             android:textStyle="bold"
                             app:drawableStartCompat="@drawable/green_coins_14x14" />
