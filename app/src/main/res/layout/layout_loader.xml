@@ -1,39 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:orientation="vertical"
-    android:layout_height="match_parent"
-    android:padding="20dp"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
     android:minWidth="300dp">
 
-    <TextView
-        android:id="@+id/title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Please wait..."
-        android:textColor="@color/gray_900"
-        android:textSize="18sp"
-        android:layout_marginBottom="20dp"/>
-
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
-        <ProgressBar
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:backgroundTint="@color/gray_800"
-            android:indeterminate="true"
-            android:layout_marginEnd="16dp"/>
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
+        <!-- Title TextView -->
         <TextView
-            android:id="@+id/message"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:textColor="@color/gray_800"
-            android:text="Please wait a moment..."
+            android:id="@+id/title"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="15sp"/>
+            android:gravity="start"
+            android:text="Please wait..."
+            android:textColor="@color/gray_900"
+            android:textSize="18sp" />
+
+        <!-- Loader Layout -->
+        <LinearLayout
+            android:id="@+id/loader_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingTop="15dp">
+
+            <!-- ProgressBar -->
+            <ProgressBar
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_marginEnd="16dp"
+                android:backgroundTint="@color/gray_800"
+                android:indeterminate="true" />
+
+            <!-- Message TextView -->
+            <TextView
+                android:id="@+id/message"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="start"
+                android:lineSpacingExtra="5dp"
+                android:text="Please wait a moment...gsg d df dsfds fdfdsf dfdsfd fd fsdf fd sdf"
+                android:textColor="@color/gray_800"
+                android:textSize="15sp" />
+        </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

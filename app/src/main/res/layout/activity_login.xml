@@ -5,47 +5,39 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
     tools:context=".LoginActivity">
 
     <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:contentDescription="@null"
-        android:scaleType="center"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        android:scaleType="centerCrop"
         app:srcCompat="@drawable/login_background" />
 
     <TextView
         android:id="@+id/textView4"
-        android:layout_width="354dp"
-        android:layout_height="25dp"
-        android:layout_marginTop="148dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="@string/welcome_to_vanam_let_s_make_the"
+        android:text="Welcome to Vanam"
         android:textColor="@color/white"
-        android:textColorLink="#9C27B0"
-        android:textSize="20sp"
+        android:textSize="28sp"
         android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.25" />
 
     <TextView
         android:id="@+id/textView5"
-        android:layout_width="269dp"
-        android:layout_height="25dp"
-        android:layout_marginTop="8dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:gravity="center"
-        android:text="@string/world_greener_together"
+        android:text="Let's Make the World Greener Together"
         android:textColor="@color/white"
-        android:textSize="20sp"
-        android:textStyle="bold"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView4" />
@@ -64,12 +56,11 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="35dp"
             android:layout_marginVertical="15dp"
-            app:cardBackgroundColor="@color/white"
-            app:cardCornerRadius="12dp"
             android:clickable="true"
             android:focusable="true"
             android:foreground="?attr/selectableItemBackground"
-            app:layout_constraintVertical_bias="0.049">
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="12dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -91,10 +82,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="start"
-                    android:textColor="@color/textColor"
                     android:text="Continue with Google"
+                    android:textColor="@color/textColor"
                     android:textSize="16sp" />
-
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
@@ -104,10 +94,10 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="35dp"
             android:layout_marginVertical="15dp"
-            app:cardBackgroundColor="@color/white"
             android:clickable="true"
             android:focusable="true"
             android:foreground="?attr/selectableItemBackground"
+            app:cardBackgroundColor="@color/white"
             app:cardCornerRadius="12dp">
 
             <LinearLayout
@@ -128,63 +118,40 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="start"
-                    android:textColor="@color/textColor"
                     android:text="Continue with Phone"
+                    android:textColor="@color/textColor"
                     android:textSize="16sp" />
-
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/auth_links"
+        android:id="@+id/footer_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         android:gravity="center"
-        android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@+id/loginButtons">
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <TextView
-            android:id="@+id/forgot_password"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Forgot Password?"
+            android:text="Every Tree Counts – Your Green Journey Starts Here"
+            android:textAlignment="center"
             android:textColor="@android:color/white"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
-        <TextView
-            android:id="@+id/sign_up"
-            android:layout_width="200dp"
-            android:layout_height="match_parent"
-            android:gravity="center|end"
-            android:text="Sign Up"
-            android:textColor="@android:color/white"
-            android:textSize="14sp" />
+        <ImageView
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/footer_text"
+            app:srcCompat="@drawable/small_plant" />
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/footer_text"
-        android:layout_width="347dp"
-        android:layout_height="19dp"
-        android:layout_marginBottom="50dp"
-        android:text="Every Tree Counts – Your Green Journey Starts Here"
-        android:textAlignment="center"
-        android:textColor="@android:color/white"
-        android:textSize="14sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.562"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <ImageView
-        android:id="@+id/imageView3"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:layout_marginTop="5dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/footer_text"
-        app:srcCompat="@drawable/small_plant" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

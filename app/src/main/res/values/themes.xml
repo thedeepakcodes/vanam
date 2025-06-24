@@ -1,6 +1,6 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <style name="Base.Theme.Vanam" parent="Theme.Material3.DayNight.NoActionBar">
+<resources>
+    <style name="Theme.Vanam" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">true</item>
     </style>
-
-    <style name="Theme.Vanam" parent="Base.Theme.Vanam" />
 </resources>

@@ -14,18 +14,14 @@ import `in`.qwicklabs.vanam.databinding.FragmentHomeBinding
 import java.util.Calendar
 
 class Home : Fragment() {
-
-    private var _binding: FragmentHomeBinding? = null
-    private val binding get() = _binding!!
-
+    private lateinit var binding: FragmentHomeBinding
     private val auth: FirebaseAuth by lazy { FirebaseAuth.getInstance() }
     private val firestore: FirebaseFirestore by lazy { FirebaseFirestore.getInstance() }
-    private val userId: String? get() = auth.currentUser?.uid
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -42,37 +38,42 @@ class Home : Fragment() {
     }
 
     private fun fetchUserData() {
-        val uid = userId ?: return showGuestUser()
 
-        firestore.collection("Vanam")
-            .document("Users")
-            .collection("Profile")
-            .document(uid)
-            .get()
+        val uid = auth.currentUser?.uid
+
+        if (uid == null) {
+            showGuestUser()
+            return
+        }
+
+        firestore.collection("Vanam").document("Users").collection("Profile").document(uid).get()
             .addOnSuccessListener { document ->
                 if (document != null && document.exists()) {
                     val name = document.getString("name")
-                    val profilePic = document.getString("profileImage")
-                        ?: auth.currentUser?.photoUrl.toString()
+                    val profilePic =
+                        document.getString("profileImage") ?: auth.currentUser?.photoUrl?.toString()
+                        ?: ""
 
                     val firstName = name?.takeIf { it.isNotBlank() }
-                        ?: auth.currentUser?.displayName?.split(" ")?.firstOrNull()
-                        ?: "Guest"
+                        ?: auth.currentUser?.displayName?.split(" ")?.firstOrNull() ?: "Guest"
 
                     binding.tvUserFirstName.text = firstName
 
-                    Glide.with(requireContext())
-                        .load(profilePic)
-                        .placeholder(R.drawable.circular_loader)
-                        .error(R.drawable.profile_sample)
-                        .circleCrop()
-                        .into(binding.ivProfilePicture)
+                    view?.let {
+                        Glide.with(it.context).load(profilePic)
+                            .placeholder(R.drawable.circular_loader)
+                            .error(R.drawable.profile_sample).circleCrop()
+                            .into(binding.ivProfilePicture)
+                    }
+
+                    binding.tvTreesPlantedCount.text = document.getString("treesPlanted") ?: "0"
+                    binding.tvDayStreakCount.text = document.getString("dayStreak") ?: "0"
+                    binding.tvGreenCoinsCount.text = document.getString("greenCoins") ?: "0"
                 } else {
                     showGuestUser()
                     Log.w("HomeFragment", "User profile document does not exist.")
                 }
-            }
-            .addOnFailureListener { e ->
+            }.addOnFailureListener { e ->
                 showGuestUser()
                 Log.e("HomeFragment", "Failed to fetch user data", e)
             }
@@ -90,10 +91,5 @@ class Home : Fragment() {
             in 17..20 -> "Good evening"
             else -> "Good night"
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }

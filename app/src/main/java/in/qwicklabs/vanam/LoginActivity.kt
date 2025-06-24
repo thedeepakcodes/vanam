@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.credentials.CredentialManager
 import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialRequest
@@ -30,29 +32,43 @@ import kotlinx.coroutines.withContext
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
-    private lateinit var auth: FirebaseAuth
-    private val credentialManager by lazy { CredentialManager.create(this) }
     private lateinit var loader: Loader
 
-    // For Moving to Dashboard or Profile Setup
-    private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
+    // Lazily initialize Firebase and Firestore
+    private val auth by lazy { FirebaseAuth.getInstance() }
+    private val credentialManager by lazy { CredentialManager.create(this) }
+    private val firestore: FirebaseFirestore by lazy { FirebaseFirestore.getInstance() }
     private val userCollection by lazy {
         firestore.collection("Vanam").document("Users").collection("Profile")
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         enableEdgeToEdge()
+
+        binding = ActivityLoginBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         loader = Loader(this)
 
-        binding = ActivityLoginBinding.inflate(layoutInflater)
-        auth = FirebaseAuth.getInstance()
-        setContentView(binding.root)
+        // Adding dynamic padding from Bottom to Footer text
+        ViewCompat.setOnApplyWindowInsetsListener(binding.footerText) { view, windowInsets ->
+            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+            binding.footerText.setPadding(
+                view.paddingLeft,
+                view.paddingTop,
+                view.paddingRight,
+                insets.bottom + (25 * resources.displayMetrics.density).toInt()
+            )
+            windowInsets
+        }
 
+        // Handle Google Sign-In
         binding.continueWithGoogle.setOnClickListener {
             loader.title.text = "Signing In"
             loader.dialog.show()
+
             val googleIdOption = GetGoogleIdOption.Builder()
                 .setFilterByAuthorizedAccounts(false)
                 .setServerClientId(getString(R.string.web_client_id))
@@ -67,8 +83,10 @@ class LoginActivity : AppCompatActivity() {
                     val result = credentialManager.getCredential(this@LoginActivity, request)
                     withContext(Dispatchers.Main) { handleSignInResult(result) }
                 } catch (e: GetCredentialException) {
-                    loader.dialog.dismiss()
-                    withContext(Dispatchers.Main) { handleSignInFailure(e) }
+                    withContext(Dispatchers.Main) {
+                        dismissLoader()
+                        handleSignInFailure(e)
+                    }
                 }
             }
         }
@@ -79,13 +97,11 @@ class LoginActivity : AppCompatActivity() {
             is CustomCredential -> {
                 if (credential.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) {
                     try {
-                        val googleIdToken = GoogleIdTokenCredential
-                            .createFrom(credential.data)
-                            .idToken
-
+                        val googleIdToken =
+                            GoogleIdTokenCredential.createFrom(credential.data).idToken
                         firebaseAuthWithGoogle(googleIdToken)
                     } catch (e: GoogleIdTokenParsingException) {
-                        loader.dialog.dismiss()
+                        dismissLoader()
                         Toast.makeText(
                             this,
                             "Authentication error: Invalid token format",
@@ -96,12 +112,8 @@ class LoginActivity : AppCompatActivity() {
             }
 
             else -> {
-                loader.dialog.dismiss()
-                Toast.makeText(
-                    this,
-                    "Unsupported authentication method",
-                    Toast.LENGTH_SHORT
-                ).show()
+                dismissLoader()
+                Toast.makeText(this, "Unsupported authentication method", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -139,10 +151,10 @@ class LoginActivity : AppCompatActivity() {
         auth.signInWithCredential(credential)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-                    loader.dialog.dismiss()
+                    dismissLoader()
                     navigateToProfile()
                 } else {
-                    loader.dialog.dismiss()
+                    dismissLoader()
                     Toast.makeText(
                         this,
                         "Authentication failed: ${task.exception?.message}",
@@ -152,14 +164,47 @@ class LoginActivity : AppCompatActivity() {
             }
     }
 
-    private fun showAccountSetupPrompt() {
+    private fun navigateToProfile() {
+        val uid = auth.uid
 
+        if (uid == null) {
+            Toast.makeText(this, "User ID not available. Please try again.", Toast.LENGTH_SHORT)
+                .show()
+            return
+        }
+
+        loader.title.text = "Checking Profile"
+        loader.dialog.show()
+
+        userCollection.document(uid).get()
+            .addOnSuccessListener { doc ->
+                dismissLoader()
+                Toast.makeText(this, "Sign-in successful", Toast.LENGTH_SHORT).show()
+                if (doc.exists() && doc.getBoolean("isProfileSetupComplete") == true) {
+                    getSharedPreferences("VanamPrefs", MODE_PRIVATE).edit()
+                        .putBoolean("isProfileComplete", true)
+                        .apply()
+                    startActivity(Intent(this, Dashboard::class.java))
+                } else {
+                    startActivity(Intent(this, BasicActivity::class.java))
+                }
+                finish()
+            }
+            .addOnFailureListener {
+                dismissLoader()
+                Toast.makeText(
+                    this,
+                    "Failed to fetch profile. Please try again.",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+    }
+
+    private fun showAccountSetupPrompt() {
         val accountManager = AccountManager.get(this)
         accountManager.addAccount(
             "com.google",
-            null,
-            null,
-            null,
+            null, null, null,
             this,
             { future ->
                 try {
@@ -168,9 +213,7 @@ class LoginActivity : AppCompatActivity() {
                     if (accountName != null) {
                         loader.title.text = "Fetching account.."
                         loader.dialog.show()
-
                         binding.continueWithGoogle.performClick()
-
                     } else {
                         Toast.makeText(
                             this,
@@ -179,34 +222,15 @@ class LoginActivity : AppCompatActivity() {
                         ).show()
                     }
                 } catch (_: Exception) {
-                    Toast.makeText(
-                        this,
-                        "You cancelled the account setup.",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    Toast.makeText(this, "You cancelled the account setup.", Toast.LENGTH_SHORT)
+                        .show()
                 }
             },
             null
         )
     }
 
-    private fun navigateToProfile() {
-        FirebaseAuth.getInstance().uid?.let {
-            userCollection.document(it).get()
-                .addOnSuccessListener { doc ->
-                    Toast.makeText(this, "Sign-in successful", Toast.LENGTH_SHORT).show()
-
-                    if (doc.exists() && doc.getBoolean("isProfileSetupComplete") == true) {
-                        getSharedPreferences("VanamPrefs", MODE_PRIVATE).edit()
-                            .putBoolean("isProfileComplete", true).commit()
-
-                        startActivity(Intent(this, Dashboard::class.java))
-                        finish()
-                    } else {
-                        startActivity(Intent(this, BasicActivity::class.java))
-                        finish()
-                    }
-                }
-        }
+    private fun dismissLoader() {
+        if (loader.dialog.isShowing) loader.dialog.dismiss()
     }
 }

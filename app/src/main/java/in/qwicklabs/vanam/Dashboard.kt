@@ -3,6 +3,7 @@ package `in`.qwicklabs.vanam
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
 import `in`.qwicklabs.vanam.databinding.ActivityDashboardBinding
 import `in`.qwicklabs.vanam.fragments.Community
@@ -19,6 +20,13 @@ class Dashboard : AppCompatActivity() {
 
         binding = ActivityDashboardBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        WindowCompat.getInsetsController(window, window.decorView).isAppearanceLightStatusBars =
+            true
+        WindowCompat.getInsetsController(window, window.decorView).isAppearanceLightNavigationBars =
+            true
+
+        window.navigationBarColor = getColor(R.color.dashboardBg)
 
         changeFragment(Home())
 

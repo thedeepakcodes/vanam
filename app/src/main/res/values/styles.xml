@@ -1,6 +1,12 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Splash screen theme -->
     <style name="Theme.Vanam.SplashScreen" parent="Theme.Vanam">
         <item name="android:windowIsTranslucent">true</item>
     </style>
+
+    <!-- Bottom Navigation transparent background -->
+    <style name="NoSelectionBackgroundBottomNav" parent="Widget.MaterialComponents.BottomNavigationView">
+        <item name="itemBackground">@android:color/transparent</item>
+    </style>
+
 </resources>

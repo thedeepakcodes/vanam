@@ -5,7 +5,11 @@ import android.os.Bundle
 import android.widget.SeekBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.edit
 import androidx.core.graphics.toColorInt
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
 import com.google.firebase.auth.FirebaseAuth
@@ -16,32 +20,41 @@ import `in`.qwicklabs.vanam.databinding.ActivityCompleteGoalsBinding
 import `in`.qwicklabs.vanam.utils.Loader
 
 class GoalsActivity : AppCompatActivity() {
-
     private lateinit var binding: ActivityCompleteGoalsBinding
-    private lateinit var gardeningCards: List<MaterialCardView>
-    private lateinit var commitmentOptions: List<MaterialButton>
-    private lateinit var loader: Loader
+    private lateinit var gardeningPreferenceCards: List<MaterialCardView>
+    private lateinit var commitmentDurationButtons: List<MaterialButton>
+    private lateinit var loadingDialog: Loader
 
-    private val firestore = FirebaseFirestore.getInstance()
-    private val userCollection by lazy {
-        firestore.collection("Vanam").document("Users").collection("Profile")
+    private val firebaseAuth: FirebaseAuth by lazy { FirebaseAuth.getInstance() }
+    private val firestoreInstance: FirebaseFirestore by lazy { FirebaseFirestore.getInstance() }
+    private val usersProfileCollection by lazy {
+        firestoreInstance.collection("Vanam").document("Users").collection("Profile")
     }
 
-    private var gardeningPref: Int? = null
-    private var commitmentGoal: Int? = null
-    private var weeklyHours: Int = 6
+    private var selectedGardeningPreferenceCardId: Int? = null
+    private var selectedCommitmentDurationButtonId: Int? = null
+    private var selectedWeeklyHours: Int = 6
 
-    private var prevGardening: String? = null
-    private var prevCommitment: Int? = null
-    private var prevWeeklyHours: Int? = null
+    private var previousGardeningPreference: String? = null
+    private var previousCommitmentDuration: Int? = null
+    private var previousWeeklyHours: Int? = null
 
-    private val defaultColor = "#E6FFF2".toColorInt()
-    private val selectedColor = "#CCEBD7".toColorInt()
+    private val defaultCardColor = "#E6FFF2".toColorInt()
+    private val selectedCardColor = "#CCEBD7".toColorInt()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCompleteGoalsBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.scrollView) { view, windowInsets ->
+            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.setPadding(view.paddingLeft, insets.top, view.paddingRight, insets.bottom)
+            windowInsets
+        }
+
+        WindowCompat.getInsetsController(window, window.decorView).isAppearanceLightStatusBars =
+            true
 
         if (getSharedPreferences("VanamPrefs", MODE_PRIVATE)
                 .getBoolean("isProfileComplete", false)
@@ -51,57 +64,57 @@ class GoalsActivity : AppCompatActivity() {
             return
         }
 
-        setupGardeningObj()
-        setupCommitmentGoal()
-        setupWeeklyCommitment()
-        setupComplete()
+        setupGardeningPreferenceCards()
+        setupCommitmentDurationButtons()
+        setupWeeklyHoursSeekBar()
+        setupCompleteButton()
 
-        // Load previously saved data
-        FirebaseAuth.getInstance().uid?.let { uid ->
-            userCollection.document(uid).get().addOnSuccessListener { doc ->
-                if (doc.exists()) {
-                    prevGardening = doc.getString("gardeningPreference")
-                    prevCommitment = doc.getLong("commitmentGoal")?.toInt()
-                    prevWeeklyHours = doc.getLong("weeklyHours")?.toInt()
-                    prefillSelections()
+        // Load previously saved user data
+        firebaseAuth.uid?.let { uid ->
+            usersProfileCollection.document(uid).get().addOnSuccessListener { documentSnapshot ->
+                if (documentSnapshot.exists()) {
+                    previousGardeningPreference = documentSnapshot.getString("gardeningPreference")
+                    previousCommitmentDuration = documentSnapshot.getLong("commitmentGoal")?.toInt()
+                    previousWeeklyHours = documentSnapshot.getLong("weeklyHours")?.toInt()
+                    prefillUserSelections()
                 }
             }
         }
     }
 
-    private fun setupGardeningObj() {
-        gardeningCards = listOf(
+    private fun setupGardeningPreferenceCards() {
+        gardeningPreferenceCards = listOf(
             binding.cardHobbyGardening,
             binding.cardCommercialGrowing,
             binding.cardSelfSustaining,
             binding.cardCommunityGarden
         )
 
-        gardeningCards.forEach { card ->
+        gardeningPreferenceCards.forEach { card ->
             card.setOnClickListener {
-                gardeningPref = card.id
-                highlightSelection(card.id, gardeningCards)
+                selectedGardeningPreferenceCardId = card.id
+                updateSelectionHighlight(card.id, gardeningPreferenceCards)
             }
         }
     }
 
-    private fun setupCommitmentGoal() {
-        commitmentOptions = listOf(
+    private fun setupCommitmentDurationButtons() {
+        commitmentDurationButtons = listOf(
             binding.btn3Months, binding.btn6Months, binding.btn1Year, binding.btnLongTerm
         )
 
-        commitmentOptions.forEach { button ->
+        commitmentDurationButtons.forEach { button ->
             button.setOnClickListener {
-                commitmentGoal = button.id
-                highlightSelection(button.id, commitmentOptions)
+                selectedCommitmentDurationButtonId = button.id
+                updateSelectionHighlight(button.id, commitmentDurationButtons)
             }
         }
     }
 
-    private fun setupWeeklyCommitment() {
+    private fun setupWeeklyHoursSeekBar() {
         binding.seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                weeklyHours = progress
+                selectedWeeklyHours = progress
                 binding.tvHoursPerWeek.text = "$progress hours/week"
             }
 
@@ -110,24 +123,24 @@ class GoalsActivity : AppCompatActivity() {
         })
     }
 
-    private fun <T> highlightSelection(selectedId: Int, views: List<T>) {
+    private fun <T> updateSelectionHighlight(selectedId: Int, views: List<T>) {
         views.forEach { view ->
             when (view) {
                 is MaterialCardView -> {
-                    view.setCardBackgroundColor(defaultColor)
-                    if (view.id == selectedId) view.setCardBackgroundColor(selectedColor)
+                    view.setCardBackgroundColor(defaultCardColor)
+                    if (view.id == selectedId) view.setCardBackgroundColor(selectedCardColor)
                 }
 
                 is MaterialButton -> {
-                    view.setBackgroundColor(defaultColor)
-                    if (view.id == selectedId) view.setBackgroundColor(selectedColor)
+                    view.setBackgroundColor(defaultCardColor)
+                    if (view.id == selectedId) view.setBackgroundColor(selectedCardColor)
                 }
             }
         }
     }
 
-    private fun getGardeningPref(): String? {
-        return when (gardeningPref) {
+    private fun mapCardIdToGardeningPreference(): String? {
+        return when (selectedGardeningPreferenceCardId) {
             binding.cardHobbyGardening.id -> "Hobby Gardening"
             binding.cardCommercialGrowing.id -> "Commercial Growing"
             binding.cardSelfSustaining.id -> "Self-Sustaining"
@@ -136,8 +149,8 @@ class GoalsActivity : AppCompatActivity() {
         }
     }
 
-    private fun getCommitmentGoal(): Int? {
-        return when (commitmentGoal) {
+    private fun mapButtonIdToCommitmentDuration(): Int? {
+        return when (selectedCommitmentDurationButtonId) {
             binding.btn3Months.id -> 3
             binding.btn6Months.id -> 6
             binding.btn1Year.id -> 12
@@ -146,98 +159,98 @@ class GoalsActivity : AppCompatActivity() {
         }
     }
 
-    private fun prefillSelections() {
-        val gardening = prevGardening
-        val commitment = prevCommitment
-        val hours = prevWeeklyHours
-
-        // Gardening Preference
-        gardeningPref = when (gardening) {
+    private fun prefillUserSelections() {
+        // Prefill gardening preference
+        selectedGardeningPreferenceCardId = when (previousGardeningPreference) {
             "Hobby Gardening" -> binding.cardHobbyGardening.id
             "Commercial Growing" -> binding.cardCommercialGrowing.id
             "Self-Sustaining" -> binding.cardSelfSustaining.id
             "Community Garden" -> binding.cardCommunityGarden.id
             else -> null
-        }?.also { highlightSelection(it, gardeningCards) }
+        }?.also { updateSelectionHighlight(it, gardeningPreferenceCards) }
 
-        // Commitment Goal
-        commitmentGoal = when (commitment) {
+        // Prefill commitment duration
+        selectedCommitmentDurationButtonId = when (previousCommitmentDuration) {
             3 -> binding.btn3Months.id
             6 -> binding.btn6Months.id
             12 -> binding.btn1Year.id
             240 -> binding.btnLongTerm.id
             else -> null
-        }?.also { highlightSelection(it, commitmentOptions) }
+        }?.also { updateSelectionHighlight(it, commitmentDurationButtons) }
 
-        // Weekly Hours
-        hours?.let {
-            weeklyHours = it
+        // Prefill weekly hours
+        previousWeeklyHours?.let {
+            selectedWeeklyHours = it
             binding.seekBar.progress = it
             binding.tvHoursPerWeek.text = "$it hours/week"
         }
     }
 
-    private fun setupComplete() {
+    private fun setupCompleteButton() {
         binding.cardCompleteButton.setOnClickListener {
-            if (gardeningPref == null || commitmentGoal == null) {
+            if (selectedGardeningPreferenceCardId == null || selectedCommitmentDurationButtonId == null) {
                 Toast.makeText(this, "Please select all preferences.", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            loader = Loader(this).apply {
+            loadingDialog = Loader(this).apply {
                 title.text = "Saving..."
                 message.text = "Please wait while we save your preferences."
                 dialog.show()
             }
 
-            val userId = FirebaseAuth.getInstance().currentUser?.uid
+            val currentUserId = firebaseAuth.currentUser?.uid
 
-            if (userId == null) {
-                loader.dialog.dismiss()
+            if (currentUserId == null) {
+                loadingDialog.dialog.dismiss()
                 Toast.makeText(this, "Please Login to continue", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            val gardening = getGardeningPref()
-            val commitment = getCommitmentGoal()
+            val gardeningPreference = mapCardIdToGardeningPreference()
+            val commitmentDuration = mapButtonIdToCommitmentDuration()
 
-            if (gardening == null || commitment == null) {
-                loader.dialog.dismiss()
+            if (gardeningPreference == null || commitmentDuration == null) {
+                loadingDialog.dialog.dismiss()
                 Toast.makeText(this, "Invalid selection. Please try again.", Toast.LENGTH_SHORT)
                     .show()
                 return@setOnClickListener
             }
 
-            val hasChanged = gardening != prevGardening ||
-                    commitment != prevCommitment ||
-                    weeklyHours != prevWeeklyHours
+            val hasUserMadeChanges = gardeningPreference != previousGardeningPreference ||
+                    commitmentDuration != previousCommitmentDuration ||
+                    selectedWeeklyHours != previousWeeklyHours
 
-            if (!hasChanged) {
-                loader.dialog.dismiss()
-                markProfileCompleteAndMove()
+            if (!hasUserMadeChanges) {
+                loadingDialog.dialog.dismiss()
+                completeProfileAndNavigateToDashboard()
                 return@setOnClickListener
             }
 
-            val data = hashMapOf(
-                "gardeningPreference" to gardening,
-                "commitmentGoal" to commitment,
-                "weeklyHours" to weeklyHours,
+            val updatedData = hashMapOf(
+                "gardeningPreference" to gardeningPreference,
+                "commitmentGoal" to commitmentDuration,
+                "weeklyHours" to selectedWeeklyHours,
                 "isProfileSetupComplete" to true
             )
 
-            userCollection.document(userId).set(data, SetOptions.merge()).addOnSuccessListener {
-                loader.dialog.dismiss()
-                markProfileCompleteAndMove()
-            }.addOnFailureListener { e ->
-                loader.dialog.dismiss()
-                Toast.makeText(this, "Failed to save: ${e.message}", Toast.LENGTH_LONG).show()
-            }
+            usersProfileCollection.document(currentUserId).set(updatedData, SetOptions.merge())
+                .addOnSuccessListener {
+                    loadingDialog.dialog.dismiss()
+                    completeProfileAndNavigateToDashboard()
+                }
+                .addOnFailureListener { exception ->
+                    loadingDialog.dialog.dismiss()
+                    Toast.makeText(this, "Failed to save: ${exception.message}", Toast.LENGTH_LONG)
+                        .show()
+                }
         }
     }
 
-    private fun markProfileCompleteAndMove() {
-        getSharedPreferences("VanamPrefs", MODE_PRIVATE).edit()
-            .putBoolean("isProfileComplete", true).apply()
+    private fun completeProfileAndNavigateToDashboard() {
+        getSharedPreferences("VanamPrefs", MODE_PRIVATE).edit {
+            putBoolean("isProfileComplete", true)
+        }
 
         startActivity(Intent(this, Dashboard::class.java))
         finish()

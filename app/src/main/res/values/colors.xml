@@ -5,6 +5,8 @@
     <color name="splashBg">#f6f7f4</color>
     <color name="textColor">#000000</color>
     <color name="loaderBg">#FFFFFF</color>
+    <color name="dashboardBg">#F9FAFB</color>
+    <color name="primary">#16a34a</color>
 
 
     <!-- Grayscale -->

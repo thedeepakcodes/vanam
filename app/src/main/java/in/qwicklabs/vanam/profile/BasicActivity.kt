@@ -10,6 +10,10 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.edit
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -19,16 +23,20 @@ import `in`.qwicklabs.vanam.Dashboard
 import `in`.qwicklabs.vanam.R
 import `in`.qwicklabs.vanam.databinding.ActivityBasicProfileBinding
 import `in`.qwicklabs.vanam.utils.Loader
+import kotlin.random.Random
 
 class BasicActivity : AppCompatActivity() {
     private lateinit var binding: ActivityBasicProfileBinding
+    private lateinit var loader: Loader
+
     private lateinit var pickImageLauncher: ActivityResultLauncher<String>
     private var imageUri: Uri? = null
     private var isImageSelected = false
-    private val storageRef by lazy { FirebaseStorage.getInstance().reference }
-    private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
-    private lateinit var loader: Loader
     private var existingProfileData: Map<String, Any>? = null
+
+    private val storageRef by lazy { FirebaseStorage.getInstance().reference }
+    private val auth by lazy { FirebaseAuth.getInstance() }
+    private val firestore: FirebaseFirestore by lazy { FirebaseFirestore.getInstance() }
     private val userCollection by lazy {
         firestore.collection("Vanam").document("Users").collection("Profile")
     }
@@ -37,6 +45,22 @@ class BasicActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
+        binding = ActivityBasicProfileBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        loader = Loader(this)
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.scrollView) { view, windowInsets ->
+            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.setPadding(view.paddingLeft, insets.top, view.paddingRight, insets.bottom)
+            windowInsets
+        }
+
+        WindowCompat.getInsetsController(window, window.decorView)
+            .isAppearanceLightStatusBars = true
+
+
+        // Move to Dashboard if Profile Setup is Complete
         if (getSharedPreferences("VanamPrefs", MODE_PRIVATE).getBoolean(
                 "isProfileComplete",
                 false
@@ -47,6 +71,7 @@ class BasicActivity : AppCompatActivity() {
             return
         }
 
+        // Move to Interest Activity if Basic Profile is Complete
         if (getSharedPreferences("VanamPrefs", MODE_PRIVATE).getBoolean(
                 "isBasicProfileComplete",
                 false
@@ -57,16 +82,7 @@ class BasicActivity : AppCompatActivity() {
             return
         }
 
-        if (FirebaseAuth.getInstance().currentUser == null) {
-            Toast.makeText(this, "Please log in first", Toast.LENGTH_SHORT).show()
-            finish()
-            return
-        }
 
-        binding = ActivityBasicProfileBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-        loader = Loader(this)
         setupImagePicker()
         setupPlantingGoalControls()
         setupSaveContinueButton()
@@ -107,21 +123,35 @@ class BasicActivity : AppCompatActivity() {
     private fun setupSaveContinueButton() {
         binding.saveContinue.setOnClickListener {
             val fullName = binding.fullName.text.toString().trim()
-            val userName = binding.username.text.toString().trim()
             val bio = binding.bioText.text.toString().trim()
             val country = binding.countrySpinner.selectedItem.toString()
             val plantingGoal = binding.plantingGoal.text.toString().toIntOrNull() ?: 0
 
-            val isValid = fullName.isNotEmpty() &&
-                    bio.isNotEmpty() &&
-                    binding.countrySpinner.selectedItemPosition > 0
-
-            if (!isValid) {
+            // Input Validation
+            if (fullName.isEmpty() || bio.isEmpty() || binding.countrySpinner.selectedItemPosition <= 0) {
                 Toast.makeText(this, "Please fill in all the required fields", Toast.LENGTH_SHORT)
                     .show()
                 return@setOnClickListener
             }
 
+            if (!fullName.all { it.isLetter() || it.isWhitespace() }) {
+                Toast.makeText(this, "Please enter a valid name", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            if (fullName.length < 3 || fullName.length > 50) {
+                Toast.makeText(this, "Name must be between 3 and 50 characters", Toast.LENGTH_SHORT)
+                    .show()
+                return@setOnClickListener
+            }
+
+            if (bio.length > 500) {
+                Toast.makeText(this, "Bio cannot be more than 500 characters", Toast.LENGTH_SHORT)
+                    .show()
+                return@setOnClickListener
+            }
+
+            // Save Profile Data
             val changedFields = hashMapOf<String, Any>()
             val old = existingProfileData ?: emptyMap()
 
@@ -131,10 +161,10 @@ class BasicActivity : AppCompatActivity() {
             if ((old["plantingGoal"] as? Long)?.toInt() != plantingGoal) changedFields["plantingGoal"] =
                 plantingGoal
 
-            val email = FirebaseAuth.getInstance().currentUser?.email
-            val username = email?.split("@")?.firstOrNull() ?: "Guest"
+            val email = auth.currentUser?.email
+            val username = email?.split("@")?.firstOrNull() ?: generateUsername()
 
-            if (old["username"] != userName) changedFields["username"] = username
+            if (old["username"] == null) changedFields["username"] = username
 
             if (isImageSelected) {
                 loader.title.text = "Uploading..."
@@ -145,8 +175,9 @@ class BasicActivity : AppCompatActivity() {
                 if (changedFields.isNotEmpty()) {
                     saveUserProfileDiff(changedFields)
                 } else {
-                    getSharedPreferences("VanamPrefs", MODE_PRIVATE).edit()
-                        .putBoolean("isBasicProfileComplete", true).apply()
+                    getSharedPreferences("VanamPrefs", MODE_PRIVATE).edit {
+                        putBoolean("isBasicProfileComplete", true)
+                    }
 
                     startActivity(Intent(this, InterestActivity::class.java))
                     finish()
@@ -156,7 +187,7 @@ class BasicActivity : AppCompatActivity() {
     }
 
     private fun uploadProfileImageWithDiff(changedFields: HashMap<String, Any>) {
-        val uid = FirebaseAuth.getInstance().uid ?: return
+        val uid = auth.uid ?: return
 
         imageUri?.let { uri ->
             val imageRef = storageRef.child("Vanam/UserProfile/$uid")
@@ -173,11 +204,12 @@ class BasicActivity : AppCompatActivity() {
     }
 
     private fun saveUserProfileDiff(changes: HashMap<String, Any>) {
-        val uid = FirebaseAuth.getInstance().uid ?: return
+        val uid = auth.uid ?: return
 
         userCollection.document(uid).set(changes, SetOptions.merge()).addOnSuccessListener {
-            getSharedPreferences("VanamPrefs", MODE_PRIVATE).edit()
-                .putBoolean("isBasicProfileComplete", true).apply()
+            getSharedPreferences("VanamPrefs", MODE_PRIVATE).edit {
+                putBoolean("isBasicProfileComplete", true)
+            }
 
             loader.dialog.dismiss()
             startActivity(Intent(this, InterestActivity::class.java))
@@ -194,13 +226,13 @@ class BasicActivity : AppCompatActivity() {
 
     private fun setupCountrySpinner() {
         val countries = resources.getStringArray(R.array.country_list)
-        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, countries)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        val adapter = ArrayAdapter(this, R.layout.spinner_item, countries)
+        adapter.setDropDownViewResource(R.layout.spinner_dropdown_item)
         binding.countrySpinner.adapter = adapter
     }
 
     private fun fetchAndAutofillProfile() {
-        val uid = FirebaseAuth.getInstance().uid ?: return
+        val uid = auth.uid ?: return
 
         loader.title.text = "Loading..."
         loader.message.text = "Fetching your profile data..."
@@ -209,19 +241,18 @@ class BasicActivity : AppCompatActivity() {
         userCollection.document(uid).get().addOnSuccessListener { document ->
             existingProfileData = document.data
 
-            val user = FirebaseAuth.getInstance().currentUser
+            val user = auth.currentUser
             val name = document.getString("name") ?: user?.displayName.toString()
             val profileImage = document.getString("profileImage") ?: user?.photoUrl.toString()
-            val username = document.getString("username") ?: user?.email?.split("@")?.firstOrNull()
 
             binding.fullName.setText(name)
             binding.bioText.setText(document.getString("bio"))
-            binding.username.setText(username)
 
             Glide.with(this)
                 .load(profileImage)
                 .placeholder(R.drawable.profile_sample)
                 .into(binding.profileImageView)
+
             isImageSelected = false
             binding.imageChooserIcon.visibility = View.GONE
 
@@ -241,5 +272,13 @@ class BasicActivity : AppCompatActivity() {
             loader.dialog.dismiss()
             Toast.makeText(this, "Failed to fetch profile", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    private fun generateUsername(): String {
+        val length = Random.nextInt(6, 11)
+        val letters = ('a'..'z')
+        return (1..length)
+            .map { letters.random() }
+            .joinToString("")
     }
 }

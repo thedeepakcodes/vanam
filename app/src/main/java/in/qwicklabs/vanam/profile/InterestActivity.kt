@@ -7,7 +7,11 @@ import android.widget.SeekBar
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.edit
 import androidx.core.graphics.toColorInt
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
 import com.google.firebase.auth.FirebaseAuth
@@ -17,26 +21,27 @@ import `in`.qwicklabs.vanam.databinding.ActivityInterestBinding
 import `in`.qwicklabs.vanam.utils.Loader
 
 class InterestActivity : AppCompatActivity() {
-
     private lateinit var binding: ActivityInterestBinding
-    private lateinit var preferenceCards: List<MaterialCardView>
-    private lateinit var plantingSeasonButtons: List<MaterialButton>
-    private lateinit var loader: Loader
-    private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
+    private lateinit var loadingDialog: Loader
 
-    private val userCollection by lazy {
-        firestore.collection("Vanam").document("Users").collection("Profile")
+    private lateinit var treePreferenceCards: List<MaterialCardView>
+    private lateinit var seasonOptionButtons: List<MaterialButton>
+
+    private val firebaseAuth: FirebaseAuth by lazy { FirebaseAuth.getInstance() }
+    private val firebaseFirestore: FirebaseFirestore by lazy { FirebaseFirestore.getInstance() }
+    private val userProfileCollection by lazy {
+        firebaseFirestore.collection("Vanam").document("Users").collection("Profile")
     }
 
-    private val defaultColor = "#E6FFF2".toColorInt()
-    private val selectedColor = "#CCEBD7".toColorInt()
-    private var selectedPreference: Int? = null
-    private var selectedSeason: Int? = null
+    private val unselectedColor = "#E6FFF2".toColorInt()
+    private val highlightedColor = "#CCEBD7".toColorInt()
+    private var selectedTreePreferenceId: Int? = null
+    private var selectedSeasonId: Int? = null
 
     // Previously saved values
-    private var previousPreference: String? = null
-    private var previousSeason: String? = null
-    private var previousExperience: Int? = null
+    private var savedTreePreference: String? = null
+    private var savedSeasonPreference: String? = null
+    private var savedExperienceLevel: Int? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,7 +49,15 @@ class InterestActivity : AppCompatActivity() {
         binding = ActivityInterestBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Skip if already complete
+        ViewCompat.setOnApplyWindowInsetsListener(binding.scrollView) { view, windowInsets ->
+            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.setPadding(view.paddingLeft, insets.top, view.paddingRight, insets.bottom)
+            windowInsets
+        }
+
+        WindowCompat.getInsetsController(window, window.decorView)
+            .isAppearanceLightStatusBars = true
+
         if (getSharedPreferences("VanamPrefs", MODE_PRIVATE)
                 .getBoolean("isProfileInterestComplete", false)
         ) {
@@ -53,70 +66,69 @@ class InterestActivity : AppCompatActivity() {
             return
         }
 
-        setupPreferenceCards()
-        setupSeasonButtons()
-        setupExperienceLevel()
-        setupSaveButton()
+        setupTreePreferenceCards()
+        setupPlantingSeasonButtons()
+        setupExperienceLevelSeekBar()
+        setupSaveAndContinueButton()
 
-        // Load saved data from Firestore
-        FirebaseAuth.getInstance().uid?.let { uid ->
-            userCollection.document(uid).get().addOnSuccessListener { document ->
+        firebaseAuth.uid?.let { userId ->
+            userProfileCollection.document(userId).get().addOnSuccessListener { document ->
                 if (document.exists()) {
-                    previousPreference = document.getString("preferredTree")
-                    previousSeason = document.getString("preferredSeason")
-                    previousExperience = document.getLong("experienceLevel")?.toInt()
-                    prefillSelections()
+                    savedTreePreference = document.getString("preferredTree")
+                    savedSeasonPreference = document.getString("preferredSeason")
+                    savedExperienceLevel = document.getLong("experienceLevel")?.toInt()
+                    prefillSavedPreferences()
                 }
             }
         }
     }
 
-    private fun setupPreferenceCards() {
-        preferenceCards = listOf(
+    private fun setupTreePreferenceCards() {
+        treePreferenceCards = listOf(
             binding.cardFruitTrees,
             binding.cardFastGrowing,
             binding.cardShadeTrees,
             binding.cardMedicinalTrees
         )
 
-        preferenceCards.forEach { card ->
+        treePreferenceCards.forEach { card ->
             card.setOnClickListener {
-                selectedPreference = card.id
-                highlightSelection(card.id, preferenceCards)
+                selectedTreePreferenceId = card.id
+                highlightSelectedView(card.id, treePreferenceCards)
             }
         }
     }
 
-    private fun setupSeasonButtons() {
-        plantingSeasonButtons = listOf(
+    private fun setupPlantingSeasonButtons() {
+        seasonOptionButtons = listOf(
             binding.btnSpring, binding.btnSummer, binding.btnFall, binding.btnWinter
         )
 
-        plantingSeasonButtons.forEach { button ->
+        seasonOptionButtons.forEach { button ->
             button.setOnClickListener {
-                selectedSeason = button.id
-                highlightSelection(button.id, plantingSeasonButtons)
+                selectedSeasonId = button.id
+                highlightSelectedView(button.id, seasonOptionButtons)
             }
         }
     }
 
-    private fun <T> highlightSelection(selectedId: Int, views: List<T>) {
-        views.forEach { view ->
+    private fun <T> highlightSelectedView(selectedId: Int, viewList: List<T>) {
+        viewList.forEach { view ->
             when (view) {
                 is MaterialCardView -> {
-                    view.setCardBackgroundColor(defaultColor)
-                    if (view.id == selectedId) view.setCardBackgroundColor(selectedColor)
+                    view.setCardBackgroundColor(unselectedColor)
+                    if (view.id == selectedId) view.setCardBackgroundColor(highlightedColor)
                 }
 
                 is MaterialButton -> {
-                    view.setBackgroundColor(defaultColor)
-                    if (view.id == selectedId) view.setBackgroundColor(selectedColor)
+                    view.setBackgroundColor(unselectedColor)
+                    if (view.id == selectedId) view.setBackgroundColor(highlightedColor)
                 }
             }
         }
     }
 
-    private fun setupExperienceLevel() {
+    private fun setupExperienceLevelSeekBar() {
         binding.seekBarExperience.setOnSeekBarChangeListener(object :
             SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
@@ -129,20 +141,20 @@ class InterestActivity : AppCompatActivity() {
     }
 
     @SuppressLint("UseKtx")
-    private fun setupSaveButton() {
+    private fun setupSaveAndContinueButton() {
         binding.saveContinue.setOnClickListener {
-            loader = Loader(this).apply {
-                title.text = "Uploading..."
-                message.text = "Please wait while we upload your profile."
+            loadingDialog = Loader(this).apply {
+                title.text = "Saving Preferences.."
+                message.text = "Please wait while we save your preferences."
                 dialog.show()
             }
 
-            val newPreference = getSelectedPreference()
-            val newSeason = getSelectedSeason()
-            val newExperience = binding.seekBarExperience.progress
+            val newTreePreference = getTreePreferenceFromSelection()
+            val newSeasonPreference = getSeasonPreferenceFromSelection()
+            val newExperienceLevel = binding.seekBarExperience.progress
 
-            if (newPreference == null || newSeason == null) {
-                loader.dialog.dismiss()
+            if (newTreePreference == null || newSeasonPreference == null) {
+                loadingDialog.dialog.dismiss()
                 Toast.makeText(
                     this,
                     "Please select a tree preference and planting season.",
@@ -151,34 +163,32 @@ class InterestActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            // Detect changes
-            val hasChanged = newPreference != previousPreference ||
-                    newSeason != previousSeason ||
-                    newExperience != previousExperience
+            val hasChanges = newTreePreference != savedTreePreference ||
+                    newSeasonPreference != savedSeasonPreference ||
+                    newExperienceLevel != savedExperienceLevel
 
-            if (!hasChanged) {
-                loader.dialog.dismiss()
-                markProfileCompleteAndMove()
+            if (!hasChanges) {
+                loadingDialog.dialog.dismiss()
+                markProfileCompleteAndProceed()
                 return@setOnClickListener
             }
 
-            // Save only if changed
-            val profileData = hashMapOf(
-                "preferredTree" to newPreference,
-                "preferredSeason" to newSeason,
-                "experienceLevel" to newExperience
+            val userPreferences = hashMapOf(
+                "preferredTree" to newTreePreference,
+                "preferredSeason" to newSeasonPreference,
+                "experienceLevel" to newExperienceLevel
             )
 
-            FirebaseAuth.getInstance().uid?.let { uid ->
-                userCollection.document(uid).set(profileData, SetOptions.merge())
+            firebaseAuth.uid?.let { userId ->
+                userProfileCollection.document(userId).set(userPreferences, SetOptions.merge())
                     .addOnSuccessListener {
-                        loader.dialog.dismiss()
-                        markProfileCompleteAndMove()
-                    }.addOnFailureListener { e ->
-                        loader.dialog.dismiss()
+                        loadingDialog.dialog.dismiss()
+                        markProfileCompleteAndProceed()
+                    }.addOnFailureListener { error ->
+                        loadingDialog.dialog.dismiss()
                         Toast.makeText(
                             this,
-                            "Failed to save profile: ${e.localizedMessage}",
+                            "Failed to save profile: ${error.localizedMessage}",
                             Toast.LENGTH_LONG
                         ).show()
                     }
@@ -186,46 +196,44 @@ class InterestActivity : AppCompatActivity() {
         }
     }
 
-    private fun markProfileCompleteAndMove() {
-        getSharedPreferences("VanamPrefs", MODE_PRIVATE).edit()
-            .putBoolean("isProfileInterestComplete", true).apply()
+    private fun markProfileCompleteAndProceed() {
+        getSharedPreferences("VanamPrefs", MODE_PRIVATE).edit {
+            putBoolean("isProfileInterestComplete", true)
+        }
 
         startActivity(Intent(this, ExpertiseActivity::class.java))
         finish()
     }
 
-    private fun prefillSelections() {
-        // Preference
-        selectedPreference = when (previousPreference) {
+    private fun prefillSavedPreferences() {
+        selectedTreePreferenceId = when (savedTreePreference) {
             "Fruit Trees" -> binding.cardFruitTrees.id
             "Fast Growing" -> binding.cardFastGrowing.id
             "Shade Trees" -> binding.cardShadeTrees.id
             "Medicinal Trees" -> binding.cardMedicinalTrees.id
             else -> null
         }?.also {
-            highlightSelection(it, preferenceCards)
+            highlightSelectedView(it, treePreferenceCards)
         }
 
-        // Season
-        selectedSeason = when (previousSeason) {
+        selectedSeasonId = when (savedSeasonPreference) {
             "Spring" -> binding.btnSpring.id
             "Summer" -> binding.btnSummer.id
             "Fall" -> binding.btnFall.id
             "Winter" -> binding.btnWinter.id
             else -> null
         }?.also {
-            highlightSelection(it, plantingSeasonButtons)
+            highlightSelectedView(it, seasonOptionButtons)
         }
 
-        // Experience
-        previousExperience?.let {
+        savedExperienceLevel?.let {
             binding.seekBarExperience.progress = it
             binding.textExperienceValue.text = "$it/5"
         }
     }
 
-    private fun getSelectedPreference(): String? {
-        return when (selectedPreference) {
+    private fun getTreePreferenceFromSelection(): String? {
+        return when (selectedTreePreferenceId) {
             binding.cardFruitTrees.id -> "Fruit Trees"
             binding.cardFastGrowing.id -> "Fast Growing"
             binding.cardShadeTrees.id -> "Shade Trees"
@@ -234,8 +242,8 @@ class InterestActivity : AppCompatActivity() {
         }
     }
 
-    private fun getSelectedSeason(): String? {
-        return when (selectedSeason) {
+    private fun getSeasonPreferenceFromSelection(): String? {
+        return when (selectedSeasonId) {
             binding.btnSpring.id -> "Spring"
             binding.btnSummer.id -> "Summer"
             binding.btnFall.id -> "Fall"
