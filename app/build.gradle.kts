@@ -48,6 +48,8 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.gridlayout)
     implementation(libs.gridlayout)
+    implementation(libs.androidx.animation.core.android)
+    implementation(libs.androidx.constraintlayout.core)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

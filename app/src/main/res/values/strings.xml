@@ -208,4 +208,11 @@
         <item>Weekly</item>
         <item>Monthly</item>
     </string-array>
+
+    <string name="longText">This is a very long text that demonstrates the scrolling behavior of the NestedScrollView. It can contain multiple paragraphs and will expand as needed to fill the available space. This is where your actual content, like user posts, settings, or other information, would go. The goal is to provide enough content to make the scrolling visible and test the collapsing toolbar functionality.</string>
+    <string name="profile_header_image_description">Header image for the user profile, depicting a forest scene.</string>
+    <string name="profile_picture_description">User\'s profile picture.</string>
+    <string name="toolbar_profile_picture_description">Small user profile picture in the toolbar.</string>
+    <string name="coin_icon_description">Coin icon representing currency.</string>
+    <string name="username_example">@johndoe</string>
 </resources>

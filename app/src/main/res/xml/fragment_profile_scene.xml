@@ -1,0 +1,39 @@
+<MotionScene xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ConstraintSet android:id="@+id/start" />
+
+    <ConstraintSet android:id="@+id/end">
+        <Constraint
+            android:id="@id/profile_image"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:padding="4dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+        <Constraint
+            android:id="@+id/full_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="70dp"
+            android:layout_marginTop="15dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/profile_image"
+            app:layout_constraintTop_toTopOf="parent" />
+    </ConstraintSet>
+
+    <Transition
+        app:constraintSetEnd="@id/end"
+        app:constraintSetStart="@id/start">
+        <KeyFrameSet>
+            <KeyPosition
+                app:curveFit="spline"
+                app:framePosition="15"
+                app:motionTarget="@id/profile_image"
+                app:percentX="0.7"
+                app:percentY="0.1" />
+        </KeyFrameSet>
+    </Transition>
+</MotionScene>

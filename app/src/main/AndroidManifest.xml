@@ -15,6 +15,12 @@
         android:theme="@style/Theme.Vanam"
         tools:targetApi="31">
         <activity
+            android:name=".Settings"
+            android:exported="false" />
+        <activity
+            android:name=".EditProfile"
+            android:exported="false" />
+        <activity
             android:name=".SplashActivity"
             android:exported="true"
             android:theme="@style/Theme.Vanam.SplashScreen">
