@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.edit
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.credentials.CredentialManager
@@ -181,9 +182,9 @@ class LoginActivity : AppCompatActivity() {
                 dismissLoader()
                 Toast.makeText(this, "Sign-in successful", Toast.LENGTH_SHORT).show()
                 if (doc.exists() && doc.getBoolean("isProfileSetupComplete") == true) {
-                    getSharedPreferences("VanamPrefs", MODE_PRIVATE).edit()
-                        .putBoolean("isProfileComplete", true)
-                        .apply()
+                    getSharedPreferences("VanamPrefs", MODE_PRIVATE).edit {
+                        putBoolean("isProfileComplete", true)
+                    }
                     startActivity(Intent(this, Dashboard::class.java))
                 } else {
                     startActivity(Intent(this, BasicActivity::class.java))

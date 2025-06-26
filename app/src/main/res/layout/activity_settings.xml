@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/dashboardBg"
     android:fitsSystemWindows="true"
     tools:context=".Settings">
 
@@ -13,14 +13,14 @@
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
+        android:background="@color/dashboardBg"
         app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/white"
+            android:background="@color/dashboardBg"
             app:navigationIcon="@drawable/ic_back"
             app:navigationIconTint="#1C1B1F"
             app:title="Settings"
@@ -28,10 +28,11 @@
             app:titleTextColor="#1C1B1F" />
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.core.widget.NestedScrollView
+    <ScrollView
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:background="@color/dashboardBg"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/appBarLayout">
 
@@ -70,7 +71,7 @@
                         android:id="@+id/userName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="John Doe"
+                        android:text=""
                         android:textAppearance="?attr/textAppearanceTitleMedium"
                         android:textColor="#1C1B1F" />
 
@@ -79,7 +80,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
-                        android:text="john.doe@example.com"
+                        android:text=""
                         android:textAppearance="?attr/textAppearanceBodyMedium"
                         android:textColor="#49454F" />
                 </LinearLayout>
@@ -91,7 +92,7 @@
                 android:paddingStart="16dp"
                 android:paddingTop="16dp"
                 android:paddingEnd="16dp"
-                android:paddingBottom="8dp"
+                android:paddingBottom="12dp"
                 android:text="Account"
                 android:textAppearance="?attr/textAppearanceLabelLarge"
                 android:textColor="#625B71" />
@@ -191,7 +192,7 @@
                 android:paddingStart="16dp"
                 android:paddingTop="24dp"
                 android:paddingEnd="16dp"
-                android:paddingBottom="8dp"
+                android:paddingBottom="12dp"
                 android:text="Notifications"
                 android:textAppearance="?attr/textAppearanceLabelLarge"
                 android:textColor="#625B71" />
@@ -289,7 +290,7 @@
                 android:paddingStart="16dp"
                 android:paddingTop="24dp"
                 android:paddingEnd="16dp"
-                android:paddingBottom="8dp"
+                android:paddingBottom="12dp"
                 android:text="Privacy"
                 android:textAppearance="?attr/textAppearanceLabelLarge"
                 android:textColor="#625B71" />
@@ -389,7 +390,7 @@
                 android:paddingStart="16dp"
                 android:paddingTop="24dp"
                 android:paddingEnd="16dp"
-                android:paddingBottom="8dp"
+                android:paddingBottom="12dp"
                 android:text="Support"
                 android:textAppearance="?attr/textAppearanceLabelLarge"
                 android:textColor="#625B71" />
@@ -516,18 +517,18 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnSignOut"
+                android:id="@+id/log_out"
                 style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="32dp"
                 android:layout_marginEnd="16dp"
-                android:text="Sign Out"
+                android:text="Log Out"
                 android:textColor="#BA1A1A"
                 app:cornerRadius="8dp"
                 app:strokeColor="#BA1A1A"
                 app:strokeWidth="1dp" />
         </LinearLayout>
-    </androidx.core.widget.NestedScrollView>
+    </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

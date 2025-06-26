@@ -23,6 +23,8 @@ gridlayoutVersion = "1.1.0"
 shimmer = "0.5.0"
 animationCoreAndroid = "1.8.3"
 constraintlayoutCore = "1.1.1"
+navigationFragmentKtx = "2.6.0"
+navigationUiKtx = "2.6.0"
 
 [libraries]
 android-country-picker = { module = "com.hbb20:android-country-picker", version.ref = "androidCountryPicker" }
@@ -50,6 +52,8 @@ gridlayout = { group = "androidx.gridlayout", name = "gridlayout", version.ref =
 shimmer = { module = "com.facebook.shimmer:shimmer", version.ref = "shimmer" }
 androidx-animation-core-android = { group = "androidx.compose.animation", name = "animation-core-android", version.ref = "animationCoreAndroid" }
 androidx-constraintlayout-core = { group = "androidx.constraintlayout", name = "constraintlayout-core", version.ref = "constraintlayoutCore" }
+androidx-navigation-fragment-ktx = { group = "androidx.navigation", name = "navigation-fragment-ktx", version.ref = "navigationFragmentKtx" }
+androidx-navigation-ui-ktx = { group = "androidx.navigation", name = "navigation-ui-ktx", version.ref = "navigationUiKtx" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

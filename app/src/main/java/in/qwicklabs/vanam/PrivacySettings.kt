@@ -1,0 +1,32 @@
+package `in`.qwicklabs.vanam
+
+import android.os.Bundle
+import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.WindowCompat
+import `in`.qwicklabs.vanam.databinding.ActivityPrivacySettingsBinding
+
+class PrivacySettings : AppCompatActivity() {
+    private lateinit var binding: ActivityPrivacySettingsBinding
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+
+        binding = ActivityPrivacySettingsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        WindowCompat.getInsetsController(window, window.decorView).isAppearanceLightStatusBars =
+            true
+        WindowCompat.getInsetsController(window, window.decorView).isAppearanceLightNavigationBars =
+            true
+
+        window.navigationBarColor = getColor(R.color.dashboardBg)
+
+        // Handle Click Listeners
+        binding.toolbar.setNavigationOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
+        }
+
+    }
+}

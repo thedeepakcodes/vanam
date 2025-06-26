@@ -1,5 +1,6 @@
 package `in`.qwicklabs.vanam
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -32,11 +33,41 @@ class Settings : AppCompatActivity() {
 
         window.navigationBarColor = getColor(R.color.dashboardBg)
 
+        loadProfileData()
+
+        // Hnalde Click Listeners
         binding.toolbar.setNavigationOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
 
-        loadProfileData()
+        binding.changePass.setOnClickListener {
+            val intent = Intent(this, ChangePass::class.java)
+            startActivity(intent)
+        }
+
+        binding.linkedAccount.setOnClickListener {
+            startActivity(Intent(this, LinkedAccounts::class.java))
+        }
+
+        binding.privacySettings.setOnClickListener {
+            startActivity(Intent(this, PrivacySettings::class.java))
+        }
+
+        binding.deleteAccount.setOnClickListener {
+            startActivity(Intent(this, DeleteAccount::class.java))
+        }
+
+        binding.helpCenter.setOnClickListener {
+            startActivity(Intent(this, HelpCenter::class.java))
+        }
+
+        binding.termsAndPolicy.setOnClickListener {
+            startActivity(Intent(this, TermsAndPrivacy::class.java))
+        }
+
+        binding.logOut.setOnClickListener {
+            startActivity(Intent(this, Logout::class.java))
+        }
 
     }
 
@@ -45,34 +76,26 @@ class Settings : AppCompatActivity() {
         if (currentUser != null) {
             val userId = currentUser.uid
 
-            userCollection.document(userId).get()
-                .addOnSuccessListener { documentSnapshot ->
-                    if (documentSnapshot.exists()) {
-                        val userName = documentSnapshot.getString("name")
-                        val userEmail = currentUser.email
-                        val profileImageUrl =
-                            documentSnapshot.getString("profileImage") ?: currentUser.photoUrl
+            userCollection.document(userId).get().addOnSuccessListener { documentSnapshot ->
+                if (documentSnapshot.exists()) {
+                    val userName = documentSnapshot.getString("name")
+                    val userEmail = currentUser.email
+                    val profileImageUrl =
+                        documentSnapshot.getString("profileImage") ?: currentUser.photoUrl
 
-                        binding.userName.text = userName ?: "N/A"
-                        binding.userEmail.text = userEmail ?: "N/A"
+                    binding.userName.text = userName ?: "N/A"
+                    binding.userEmail.text = userEmail ?: "N/A"
 
-                        Glide.with(this)
-                            .load(profileImageUrl)
-                            .placeholder(R.drawable.circular_loader)
-                            .error(R.drawable.profile_sample)
-                            .circleCrop()
-                            .into(binding.profileImage)
-                    } else {
-                        Toast.makeText(this, "Profile data not found.", Toast.LENGTH_SHORT).show()
-                    }
+                    Glide.with(this).load(profileImageUrl).placeholder(R.drawable.circular_loader)
+                        .error(R.drawable.profile_sample).circleCrop().into(binding.profileImage)
+                } else {
+                    Toast.makeText(this, "Profile data not found.", Toast.LENGTH_SHORT).show()
                 }
-                .addOnFailureListener { e ->
-                    Toast.makeText(
-                        this,
-                        "Failed to load profile data: ${e.message}",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
+            }.addOnFailureListener { e ->
+                Toast.makeText(
+                    this, "Failed to load profile data: ${e.message}", Toast.LENGTH_SHORT
+                ).show()
+            }
         } else {
             Toast.makeText(this, "User not logged in.", Toast.LENGTH_SHORT).show()
         }

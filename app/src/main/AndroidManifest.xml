@@ -15,6 +15,37 @@
         android:theme="@style/Theme.Vanam"
         tools:targetApi="31">
         <activity
+            android:name=".Logout"
+            android:exported="false" />
+        <activity
+            android:name=".TermsAndPrivacy"
+            android:exported="false" />
+        <activity
+            android:name=".PhoneSupport"
+            android:exported="false" />
+        <activity
+            android:name=".ChatSupport"
+            android:exported="false"
+            android:theme="@style/Theme.Vanam" />
+        <activity
+            android:name=".EmailSupport"
+            android:exported="false" />
+        <activity
+            android:name=".HelpCenter"
+            android:exported="false" />
+        <activity
+            android:name=".DeleteAccount"
+            android:exported="false" />
+        <activity
+            android:name=".PrivacySettings"
+            android:exported="false" />
+        <activity
+            android:name=".LinkedAccounts"
+            android:exported="false" />
+        <activity
+            android:name=".ChangePass"
+            android:exported="false" />
+        <activity
             android:name=".Settings"
             android:exported="false" />
         <activity
