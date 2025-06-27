@@ -15,44 +15,44 @@
         android:theme="@style/Theme.Vanam"
         tools:targetApi="31">
         <activity
-            android:name=".Logout"
+            android:name=".activities.Logout"
             android:exported="false" />
         <activity
-            android:name=".TermsAndPrivacy"
+            android:name=".activities.TermsAndPrivacy"
             android:exported="false" />
         <activity
-            android:name=".PhoneSupport"
+            android:name=".activities.PhoneSupport"
             android:exported="false" />
         <activity
-            android:name=".ChatSupport"
+            android:name=".activities.ChatSupport"
             android:exported="false"
             android:theme="@style/Theme.Vanam" />
         <activity
-            android:name=".EmailSupport"
+            android:name=".activities.EmailSupport"
             android:exported="false" />
         <activity
-            android:name=".HelpCenter"
+            android:name=".activities.HelpCenter"
             android:exported="false" />
         <activity
-            android:name=".DeleteAccount"
+            android:name=".activities.DeleteAccount"
             android:exported="false" />
         <activity
-            android:name=".PrivacySettings"
+            android:name=".activities.PrivacySettings"
             android:exported="false" />
         <activity
-            android:name=".LinkedAccounts"
+            android:name=".activities.LinkedAccounts"
             android:exported="false" />
         <activity
-            android:name=".ChangePass"
+            android:name=".activities.ChangePass"
             android:exported="false" />
         <activity
-            android:name=".Settings"
+            android:name=".activities.Settings"
             android:exported="false" />
         <activity
-            android:name=".EditProfile"
+            android:name=".activities.EditProfile"
             android:exported="false" />
         <activity
-            android:name=".SplashActivity"
+            android:name=".activities.SplashActivity"
             android:exported="true"
             android:theme="@style/Theme.Vanam.SplashScreen">
             <intent-filter>
@@ -62,10 +62,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".WelcomeActivity"
+            android:name=".activities.WelcomeActivity"
             android:exported="false" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".activities.LoginActivity"
             android:exported="false" />
         <activity
             android:name=".profile.BasicActivity"
@@ -80,7 +80,7 @@
             android:name=".profile.GoalsActivity"
             android:exported="false" />
         <activity
-            android:name=".Dashboard"
+            android:name=".activities.Dashboard"
             android:exported="false" />
     </application>
 

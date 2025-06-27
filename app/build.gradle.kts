@@ -64,5 +64,6 @@ dependencies {
     implementation(libs.googleid)
     implementation(libs.firebase.firestore)
     implementation(libs.glide)
+    implementation(libs.jbcrypt)
 
 }

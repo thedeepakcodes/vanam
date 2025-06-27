@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/dashboardBg"
     android:fitsSystemWindows="true"
-    tools:context=".Settings">
+    tools:context=".activities.Settings">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
@@ -111,6 +111,42 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
+
+                    <LinearLayout
+                        android:id="@+id/edit_profile"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingHorizontal="16dp"
+                        android:paddingVertical="12dp">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:contentDescription="Change Password Icon"
+                            android:src="@drawable/ic_edit"
+                            app:tint="@color/primary" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_weight="1"
+                            android:text="Edit Profile"
+                            android:textAppearance="?attr/textAppearanceBodyLarge"
+                            android:textColor="#1C1B1F" />
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:contentDescription="Go to Change Password"
+                            android:src="@drawable/ic_arrow_right"
+                            app:tint="#49454F" />
+                    </LinearLayout>
 
                     <LinearLayout
                         android:id="@+id/changePass"

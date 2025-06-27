@@ -1,10 +1,11 @@
-package `in`.qwicklabs.vanam
+package `in`.qwicklabs.vanam.activities
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
+import `in`.qwicklabs.vanam.R
 import `in`.qwicklabs.vanam.databinding.ActivityDashboardBinding
 import `in`.qwicklabs.vanam.fragments.Community
 import `in`.qwicklabs.vanam.fragments.Home

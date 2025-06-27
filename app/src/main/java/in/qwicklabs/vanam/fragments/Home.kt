@@ -1,22 +1,20 @@
 package `in`.qwicklabs.vanam.fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
 import `in`.qwicklabs.vanam.R
 import `in`.qwicklabs.vanam.databinding.FragmentHomeBinding
+import `in`.qwicklabs.vanam.viewModel.UserViewModel
 import java.util.Calendar
 
 class Home : Fragment() {
     private lateinit var binding: FragmentHomeBinding
-    private val auth: FirebaseAuth by lazy { FirebaseAuth.getInstance() }
-    private val firestore: FirebaseFirestore by lazy { FirebaseFirestore.getInstance() }
+    private val userViewModel: UserViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -30,57 +28,26 @@ class Home : Fragment() {
 
         binding.tvGreeting.text = getGreetingMessage()
 
-        if (auth.currentUser != null) {
-            fetchUserData()
-        } else {
-            showGuestUser()
-        }
+        observeUserData()
     }
 
-    private fun fetchUserData() {
+    private fun observeUserData() {
+        userViewModel.user.observe(viewLifecycleOwner) { user ->
+            if (user != null) {
+                val firstName = user.name?.split(" ")?.firstOrNull() ?: "Guest"
 
-        val uid = auth.currentUser?.uid
+                Glide.with(requireContext()).load(user.photoUrl)
+                    .placeholder(R.drawable.circular_loader).error(R.drawable.profile_sample)
+                    .circleCrop().into(binding.ivProfilePicture)
 
-        if (uid == null) {
-            showGuestUser()
-            return
-        }
-
-        firestore.collection("Vanam").document("Users").collection("Profile").document(uid).get()
-            .addOnSuccessListener { document ->
-                if (document != null && document.exists()) {
-                    val name = document.getString("name")
-                    val profilePic =
-                        document.getString("profileImage") ?: auth.currentUser?.photoUrl?.toString()
-                        ?: ""
-
-                    val firstName = name?.takeIf { it.isNotBlank() }
-                        ?: auth.currentUser?.displayName?.split(" ")?.firstOrNull() ?: "Guest"
-
-                    binding.tvUserFirstName.text = firstName
-
-                    view?.let {
-                        Glide.with(it.context).load(profilePic)
-                            .placeholder(R.drawable.circular_loader)
-                            .error(R.drawable.profile_sample).circleCrop()
-                            .into(binding.ivProfilePicture)
-                    }
-
-                    binding.tvTreesPlantedCount.text = document.getString("treesPlanted") ?: "0"
-                    binding.tvDayStreakCount.text = document.getString("dayStreak") ?: "0"
-                    binding.tvGreenCoinsCount.text = document.getString("greenCoins") ?: "0"
-                } else {
-                    showGuestUser()
-                    Log.w("HomeFragment", "User profile document does not exist.")
-                }
-            }.addOnFailureListener { e ->
-                showGuestUser()
-                Log.e("HomeFragment", "Failed to fetch user data", e)
+                binding.tvUserFirstName.text = firstName
+                binding.tvTreesPlantedCount.text = user.treesCount.toString()
+                binding.tvDayStreakCount.text = user.dayStreak.toString()
+                binding.tvGreenCoinsCount.text = user.greenCoins.toString()
+            } else {
+                binding.tvUserFirstName.text = "Guest"
             }
-    }
-
-    private fun showGuestUser() {
-        binding.tvUserFirstName.text = "Guest"
+        }
     }
 
     private fun getGreetingMessage(): String {

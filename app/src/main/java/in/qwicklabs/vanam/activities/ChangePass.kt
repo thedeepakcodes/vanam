@@ -1,24 +1,23 @@
-package `in`.qwicklabs.vanam
+package `in`.qwicklabs.vanam.activities
 
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
+import androidx.lifecycle.lifecycleScope
+import `in`.qwicklabs.vanam.R
 import `in`.qwicklabs.vanam.databinding.ActivityChangePassBinding
+import `in`.qwicklabs.vanam.model.User
+import `in`.qwicklabs.vanam.repository.FirebaseRepository
+import `in`.qwicklabs.vanam.repository.UserRepository
+import `in`.qwicklabs.vanam.utils.PasswordHasher
+import kotlinx.coroutines.launch
 import java.util.regex.Pattern
 
 class ChangePass : AppCompatActivity() {
 
     private lateinit var binding: ActivityChangePassBinding
-
-    private val auth: FirebaseAuth by lazy { FirebaseAuth.getInstance() }
-    private val firestore: FirebaseFirestore by lazy { FirebaseFirestore.getInstance() }
-    private val userCollection by lazy {
-        firestore.collection("Vanam").document("Users").collection("Profile")
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -136,7 +135,9 @@ class ChangePass : AppCompatActivity() {
     }
 
     private fun updatePassword(currentPassword: String, newPassword: String) {
-        val userId = auth.currentUser?.uid ?: run {
+        val userId = FirebaseRepository.getCurrentUserId()
+
+        if (userId == "") {
             showToast("User not logged in.")
             return
         }
@@ -147,28 +148,50 @@ class ChangePass : AppCompatActivity() {
         updateButton.isEnabled = false
         updateButton.text = "Updating..."
 
-        userCollection.document(userId).get().addOnSuccessListener { document ->
-            val storedPassword = document.getString("password").orEmpty()
+        lifecycleScope.launch {
+            try {
+                val user: User? = UserRepository.getUser()
 
-            val isPasswordMatch =
-                storedPassword == currentPassword || (storedPassword.isEmpty() && currentPassword == DEFAULT_PASSWORD)
+                if (user == null) {
+                    onPasswordUpdateFailure(
+                        originalText,
+                        "Failed to fetch user data for password update."
+                    )
+                    return@launch
+                }
 
-            if (isPasswordMatch) {
-                userCollection.document(userId).update("password", newPassword)
-                    .addOnSuccessListener { onPasswordUpdateSuccess(originalText) }
-                    .addOnFailureListener {
-                        onPasswordUpdateFailure(
-                            originalText, "Failed to update password."
-                        )
+                val storedHashedPassword = user.password
+
+                if (storedHashedPassword.isNullOrEmpty() && currentPassword == DEFAULT_PASSWORD) {
+                    user.password = PasswordHasher.hashPassword(newPassword)
+                } else if (!storedHashedPassword.isNullOrEmpty()) {
+                    if (PasswordHasher.checkPassword(currentPassword, storedHashedPassword)) {
+                        user.password = PasswordHasher.hashPassword(newPassword)
+                    } else {
+                        onPasswordUpdateFailure(originalText, "Incorrect current password.")
+                        return@launch
                     }
-            } else {
-                onPasswordUpdateFailure(originalText, "Incorrect current password.")
-            }
+                } else {
+                    onPasswordUpdateFailure(
+                        originalText,
+                        "Password not set. Use default password."
+                    )
+                    return@launch
+                }
 
-        }.addOnFailureListener {
-            onPasswordUpdateFailure(originalText, "Failed to fetch user data.")
+                UserRepository.updateUser(user)
+                onPasswordUpdateSuccess(originalText)
+
+            } catch (e: Exception) {
+                onPasswordUpdateFailure(
+                    originalText,
+                    "An error occurred during password update. Please try again."
+                )
+                return@launch
+            }
         }
     }
+
 
     private fun onPasswordUpdateSuccess(originalButtonText: String) {
         binding.btnUpdatePassword.apply {

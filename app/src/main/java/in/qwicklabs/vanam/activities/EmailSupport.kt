@@ -1,4 +1,4 @@
-package `in`.qwicklabs.vanam
+package `in`.qwicklabs.vanam.activities
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
@@ -8,6 +8,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
 import androidx.core.view.WindowCompat
+import `in`.qwicklabs.vanam.R
 import `in`.qwicklabs.vanam.databinding.ActivityEmailSupportBinding
 
 class EmailSupport : AppCompatActivity() {

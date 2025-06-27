@@ -10,23 +10,20 @@ import androidx.core.graphics.toColorInt
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.SetOptions
+import androidx.lifecycle.lifecycleScope
 import `in`.qwicklabs.vanam.databinding.ActivityCompleteExpertiseBinding
+import `in`.qwicklabs.vanam.model.User
+import `in`.qwicklabs.vanam.repository.FirebaseRepository
+import `in`.qwicklabs.vanam.repository.UserRepository
 import `in`.qwicklabs.vanam.utils.Loader
+import kotlinx.coroutines.launch
 
 class ExpertiseActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityCompleteExpertiseBinding
     private lateinit var loader: Loader
-
-    private val firebaseAuth: FirebaseAuth by lazy { FirebaseAuth.getInstance() }
-    private val firebaseFirestore: FirebaseFirestore by lazy { FirebaseFirestore.getInstance() }
-    private val userProfileCollection by lazy {
-        firebaseFirestore.collection("Vanam").document("Users").collection("Profile")
-    }
-
+    private val sharedPrefs by lazy { getSharedPreferences("VanamPrefs", MODE_PRIVATE) }
+    private var currentUser: User? = null
     private var selectedExperienceLevelIndex: Int? = null
     private var selectedYearsOfExperience: Int? = 0
 
@@ -53,11 +50,9 @@ class ExpertiseActivity : AppCompatActivity() {
         WindowCompat.getInsetsController(window, window.decorView).isAppearanceLightStatusBars =
             true
 
-        if (getSharedPreferences("VanamPrefs", MODE_PRIVATE)
-                .getBoolean("isProfileExpertiseComplete", false)
-        ) {
-            navigateToGoalsScreen()
-            return
+        if (sharedPrefs.getBoolean("ProfileSetup_3", false)) {
+            startActivity(Intent(this, GoalsActivity::class.java))
+            finish()
         }
 
         setupExperienceLevelCardListeners()
@@ -65,23 +60,17 @@ class ExpertiseActivity : AppCompatActivity() {
         setupNextButtonClickListener()
 
         // Load previously saved user expertise data
-        firebaseAuth.uid?.let { userId ->
-            userProfileCollection.document(userId).get().addOnSuccessListener { document ->
-                if (document.exists()) {
-                    previouslySavedLevel = document.getString("expertiseLevel")
-                    previouslySavedYears = document.getLong("experienceYears")?.toInt()
-                    prefillUserSelections()
-                }
-            }
+        lifecycleScope.launch {
+            currentUser = UserRepository.getUser()
+            previouslySavedLevel = currentUser?.expLevel
+            previouslySavedYears = currentUser?.expYear
+            prefillUserSelections()
         }
     }
 
     private fun setupExperienceLevelCardListeners() {
         val levelCards = listOf(
-            binding.cardBeginner,
-            binding.cardIntermediate,
-            binding.cardAdvanced,
-            binding.cardExpert
+            binding.cardBeginner, binding.cardIntermediate, binding.cardAdvanced, binding.cardExpert
         )
 
         levelCards.forEachIndexed { index, cardView ->
@@ -113,9 +102,9 @@ class ExpertiseActivity : AppCompatActivity() {
             loader.message.text = "Please wait while we update your experience level."
             loader.dialog.show()
 
-            val userId = firebaseAuth.currentUser?.uid
+            val userId = FirebaseRepository.getCurrentUserId()
 
-            if (userId == null) {
+            if (userId == "") {
                 showError("User not logged in")
                 return@setOnClickListener
             }
@@ -150,19 +139,22 @@ class ExpertiseActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            val updatedExpertiseData = hashMapOf(
-                "expertiseLevel" to levelString,
-                "experienceYears" to experienceYears
-            )
+            currentUser?.expLevel = levelString
+            currentUser?.expYear = experienceYears
 
-            userProfileCollection.document(userId).set(updatedExpertiseData, SetOptions.merge())
-                .addOnSuccessListener {
+            lifecycleScope.launch {
+                try {
+                    currentUser?.let { it1 -> UserRepository.updateUser(it1) }
                     loader.dialog.dismiss()
                     markProfileCompleteAndProceed()
+                } catch (e: Exception) {
+                    Toast.makeText(
+                        this@ExpertiseActivity,
+                        "Failed to update profile: ${e.localizedMessage}",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
-                .addOnFailureListener { error ->
-                    showError("Failed to update profile: ${error.localizedMessage}")
-                }
+            }
         }
     }
 
@@ -178,10 +170,7 @@ class ExpertiseActivity : AppCompatActivity() {
         selectedExperienceLevelIndex = levelIndex
 
         val levelCards = listOf(
-            binding.cardBeginner,
-            binding.cardIntermediate,
-            binding.cardAdvanced,
-            binding.cardExpert
+            binding.cardBeginner, binding.cardIntermediate, binding.cardAdvanced, binding.cardExpert
         )
 
         levelIndex?.let { selectedIndex ->
@@ -199,14 +188,8 @@ class ExpertiseActivity : AppCompatActivity() {
     }
 
     private fun markProfileCompleteAndProceed() {
-        getSharedPreferences("VanamPrefs", MODE_PRIVATE).edit {
-            putBoolean("isProfileExpertiseComplete", true)
-        }
-        navigateToGoalsScreen()
-    }
-
-    private fun navigateToGoalsScreen() {
-        startActivity(Intent(this, GoalsActivity::class.java))
+        sharedPrefs.edit { putBoolean("ProfileSetup_3", true) }
+        startActivity(Intent(this@ExpertiseActivity, GoalsActivity::class.java))
         finish()
     }
 
@@ -215,3 +198,4 @@ class ExpertiseActivity : AppCompatActivity() {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 }
+

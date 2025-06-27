@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/dashboardBg"
     android:fitsSystemWindows="true"
-    tools:context=".HelpCenter">
+    tools:context=".activities.HelpCenter">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"

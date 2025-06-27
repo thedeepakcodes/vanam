@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/complete_profile_layout"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".profile.BasicActivity">
@@ -88,8 +88,7 @@
                     android:layout_height="match_parent"
                     android:background="@drawable/circle_background"
                     android:clipToOutline="true"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/profile_sample" />
+                    android:scaleType="centerCrop" />
 
                 <ImageView
                     android:id="@+id/imageChooserIcon"

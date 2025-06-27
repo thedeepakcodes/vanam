@@ -1,7 +1,5 @@
-package `in`.qwicklabs.vanam
+package `in`.qwicklabs.vanam.activities
 
-import android.app.Activity
-import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -10,25 +8,21 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
+import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.SetOptions
-import com.google.firebase.storage.FirebaseStorage
+import `in`.qwicklabs.vanam.R
 import `in`.qwicklabs.vanam.databinding.ActivityEditProfileBinding
+import `in`.qwicklabs.vanam.model.User
+import `in`.qwicklabs.vanam.repository.FirebaseRepository
+import `in`.qwicklabs.vanam.repository.UserRepository
 import `in`.qwicklabs.vanam.utils.Loader
+import kotlinx.coroutines.launch
 
 class EditProfile : AppCompatActivity() {
 
     private lateinit var binding: ActivityEditProfileBinding
     private lateinit var loader: Loader
-
-    private val storageRef by lazy { FirebaseStorage.getInstance().reference }
-    private val auth by lazy { FirebaseAuth.getInstance() }
-    private val firestore by lazy { FirebaseFirestore.getInstance() }
-    private val userCollection by lazy {
-        firestore.collection("Vanam").document("Users").collection("Profile")
-    }
+    private var currentUser: User? = null
 
     private var profileUri: Uri? = null
     private var isImageSelected = false
@@ -61,31 +55,32 @@ class EditProfile : AppCompatActivity() {
     }
 
     private fun loadUserData() {
-        val userId = auth.currentUser?.uid ?: return
+        lifecycleScope.launch {
+            try {
+                currentUser = UserRepository.getUser()
 
-        userCollection.document(userId).get()
-            .addOnSuccessListener { document ->
-                if (document.exists()) {
-                    binding.etFullName.setText(document.getString("name"))
-                    binding.username.setText(document.getString("username"))
-                    binding.etBio.setText(document.getString("bio"))
+                if (currentUser !== null) {
+                    binding.etFullName.setText(currentUser?.name)
+                    binding.username.setText(currentUser?.username)
+                    binding.etBio.setText(currentUser?.bio)
+                    binding.phoneNumber.setText(currentUser?.phoneNumber)
 
-                    val imageUrl =
-                        document.getString("profileImage") ?: auth.currentUser?.photoUrl.toString()
-                    Glide.with(this)
+                    val imageUrl = currentUser?.photoUrl
+                    Glide.with(this@EditProfile)
                         .load(imageUrl)
                         .placeholder(R.drawable.circular_loader)
                         .error(R.drawable.profile_sample)
                         .circleCrop()
                         .into(binding.profileImage)
                 } else {
-                    Toast.makeText(this, "User profile not found.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@EditProfile, "User profile not found.", Toast.LENGTH_SHORT)
+                        .show()
                 }
+            } catch (e: Exception) {
+                Toast.makeText(this@EditProfile, "Error loading profile data.", Toast.LENGTH_SHORT)
+                    .show()
             }
-            .addOnFailureListener { e ->
-                Log.e("EditProfile", "Failed to load user data: ${e.message}", e)
-                Toast.makeText(this, "Error loading profile data.", Toast.LENGTH_SHORT).show()
-            }
+        }
     }
 
     private fun setupClickListeners() {
@@ -106,10 +101,13 @@ class EditProfile : AppCompatActivity() {
         val fullName = binding.etFullName.text.toString().trim()
         val username = binding.username.text.toString().trim()
         val bio = binding.etBio.text.toString().trim()
+        val phoneNo = binding.phoneNumber.text.toString().trim()
 
-        if (!validateInputs(fullName, username, bio)) return
+        if (!validateInputs(fullName, username, bio, phoneNo)) return
 
-        val userId = auth.currentUser?.uid ?: run {
+        val userId = FirebaseRepository.getCurrentUserId()
+
+        if (userId == "") {
             Toast.makeText(this, "User not logged in.", Toast.LENGTH_SHORT).show()
             return
         }
@@ -119,17 +117,15 @@ class EditProfile : AppCompatActivity() {
 
         if (isImageSelected && profileUri != null) {
             uploadProfileImage(profileUri!!) { imageUrl ->
-                saveUserData(userId, fullName, username, bio, imageUrl)
+                saveUserData(userId, fullName, username, bio, phoneNo, imageUrl)
             }
         } else {
-            saveUserData(userId, fullName, username, bio, null)
+            saveUserData(userId, fullName, username, bio, phoneNo, null)
         }
     }
 
     private fun uploadProfileImage(uri: Uri, onComplete: (String?) -> Unit) {
-        val userId = auth.currentUser?.uid ?: return
-
-        val profileImageRef = storageRef.child("Vanam/UserProfile/$userId")
+        val profileImageRef = FirebaseRepository.getUserProfileImageRef()
 
         profileImageRef.putFile(uri)
             .addOnSuccessListener {
@@ -137,7 +133,6 @@ class EditProfile : AppCompatActivity() {
                     onComplete(downloadUri.toString())
                 }.addOnFailureListener { e ->
                     loader.dialog.dismiss()
-                    Log.e("EditProfile", "Failed to get download URL: ${e.message}", e)
                     Toast.makeText(this, "Failed to get image URL.", Toast.LENGTH_SHORT).show()
                 }
             }
@@ -153,45 +148,43 @@ class EditProfile : AppCompatActivity() {
         fullName: String,
         username: String,
         bio: String,
+        phoneNo: String,
         imageUrl: String?
     ) {
-        val userData = mutableMapOf(
-            "name" to fullName,
-            "username" to username,
-            "bio" to bio
-        )
+        currentUser?.name = fullName
+        currentUser?.username = username
+        currentUser?.bio = bio
+        currentUser?.phoneNumber = phoneNo
 
         if (!imageUrl.isNullOrEmpty()) {
-            userData["profileImage"] = imageUrl
+            currentUser?.photoUrl = imageUrl
         }
 
-        userCollection.document(userId)
-            .set(userData, SetOptions.merge())
-            .addOnSuccessListener {
+        lifecycleScope.launch {
+            try {
+                currentUser?.let { UserRepository.updateUser(it) }
                 loader.dialog.dismiss()
-                Toast.makeText(this, "Profile updated successfully!", Toast.LENGTH_SHORT).show()
-
-                val resultIntent = Intent().apply {
-                    putExtra("name", fullName)
-                    putExtra("username", username)
-                    putExtra("bio", bio)
-                    if (!imageUrl.isNullOrEmpty()) {
-                        putExtra("profileImage", imageUrl)
-                    }
-                }
-
-                setResult(Activity.RESULT_OK, resultIntent)
+                Toast.makeText(
+                    this@EditProfile,
+                    "Profile updated successfully!",
+                    Toast.LENGTH_SHORT
+                ).show()
                 finish()
-            }
-            .addOnFailureListener { e ->
+            } catch (e: Exception) {
                 loader.dialog.dismiss()
-                Log.e("EditProfile", "Failed to update user data: ${e.message}", e)
-                Toast.makeText(this, "Failed to save profile.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@EditProfile, "Failed to save profile.", Toast.LENGTH_SHORT)
+                    .show()
             }
+        }
     }
 
-    // 🔍 Input validation method
-    private fun validateInputs(fullName: String, username: String, bio: String): Boolean {
+    // Input validation method
+    private fun validateInputs(
+        fullName: String,
+        username: String,
+        bio: String,
+        phoneNo: String
+    ): Boolean {
         if (fullName.length < 3) {
             Toast.makeText(this, "Name must be at least 3 characters.", Toast.LENGTH_SHORT)
                 .show()
@@ -216,6 +209,22 @@ class EditProfile : AppCompatActivity() {
 
         if (bio.length > 150) {
             Toast.makeText(this, "Bio cannot exceed 150 characters.", Toast.LENGTH_SHORT).show()
+            return false
+        }
+
+        if (phoneNo.length != 10) {
+            Toast.makeText(this, "Phone number must be 10 digits.", Toast.LENGTH_SHORT).show()
+            return false
+        }
+
+        if (phoneNo.startsWith("0")) {
+            Toast.makeText(this, "Phone number cannot start with 0.", Toast.LENGTH_SHORT).show()
+            return false
+        }
+
+        if (!phoneNo.matches(Regex("\\d+"))) {
+            Toast.makeText(this, "Phone number must contain only digits.", Toast.LENGTH_SHORT)
+                .show()
             return false
         }
 

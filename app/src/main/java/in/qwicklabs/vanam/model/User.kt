@@ -1,0 +1,31 @@
+package `in`.qwicklabs.vanam.model
+
+data class User(
+    var username: String? = null,
+    var email: String? = null,
+    var password: String? = null,
+    var phoneNumber: String? = null,
+    var photoUrl: String? = null,
+    var name: String? = null,
+    var bio: String? = null,
+    var plantingGoal: Int? = null,
+    var country: String? = null,
+    var plantTypeInterest: String? = null,
+    var preferredSeason: String? = null,
+    var expRating: Int = 0,
+    var expYear: Int = 0,
+    var expLevel: String? = null,
+    var gardeningType: String? = null,
+    var weeklyTimeCommitmentHours: Int? = null,
+    var goalDeadlineDays: Int? = null,
+    var treesCount: Int = 0,
+    var dayStreak: Int = 0,
+    var greenCoins: Int = 500,
+    var postCount: Int = 0,
+    var isEmailNotificationsEnabled: Boolean = true,
+    var isPushNotificationsEnabled: Boolean = true,
+    var badges: MutableMap<String, Any> = mutableMapOf(),
+    var achievements: MutableMap<String, Any> = mutableMapOf(),
+    var isProfileSetupComplete: Boolean = false,
+    var joinedAt: Long? = null
+)

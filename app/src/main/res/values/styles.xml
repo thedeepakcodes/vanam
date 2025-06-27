@@ -1,16 +1,13 @@
 <resources>
-    <!-- Splash screen theme -->
+
     <style name="Theme.Vanam.SplashScreen" parent="Theme.Vanam">
         <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:navigationBarColor">@color/splashBg</item>
     </style>
 
     <!-- Bottom Navigation transparent background -->
     <style name="NoSelectionBackgroundBottomNav" parent="Widget.MaterialComponents.BottomNavigationView">
         <item name="itemBackground">@android:color/transparent</item>
-    </style>
-
-    <style name="ShapeAppearanceOverlay.App.CornerSize50Percent" parent="">
-        <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">50%</item>
     </style>
 </resources>

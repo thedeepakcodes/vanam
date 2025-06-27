@@ -1,12 +1,12 @@
-package `in`.qwicklabs.vanam
+package `in`.qwicklabs.vanam.activities
 
 import android.accounts.AccountManager
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.edit
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.credentials.CredentialManager
@@ -21,11 +21,12 @@ import androidx.lifecycle.lifecycleScope
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingException
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
-import com.google.firebase.firestore.FirebaseFirestore
+import `in`.qwicklabs.vanam.R
 import `in`.qwicklabs.vanam.databinding.ActivityLoginBinding
 import `in`.qwicklabs.vanam.profile.BasicActivity
+import `in`.qwicklabs.vanam.repository.FirebaseRepository
+import `in`.qwicklabs.vanam.repository.UserRepository
 import `in`.qwicklabs.vanam.utils.Loader
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -35,25 +36,19 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
     private lateinit var loader: Loader
 
-    // Lazily initialize Firebase and Firestore
-    private val auth by lazy { FirebaseAuth.getInstance() }
     private val credentialManager by lazy { CredentialManager.create(this) }
-    private val firestore: FirebaseFirestore by lazy { FirebaseFirestore.getInstance() }
-    private val userCollection by lazy {
-        firestore.collection("Vanam").document("Users").collection("Profile")
-    }
+    private val auth = FirebaseRepository.getAuthInstance()
+    private val sharedPrefs by lazy { getSharedPreferences("VanamPrefs", MODE_PRIVATE) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         enableEdgeToEdge()
-
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         loader = Loader(this)
 
-        // Adding dynamic padding from Bottom to Footer text
+        /** Adding dynamic padding from Bottom to Footer text **/
         ViewCompat.setOnApplyWindowInsetsListener(binding.footerText) { view, windowInsets ->
             val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
             binding.footerText.setPadding(
@@ -70,14 +65,10 @@ class LoginActivity : AppCompatActivity() {
             loader.title.text = "Signing In"
             loader.dialog.show()
 
-            val googleIdOption = GetGoogleIdOption.Builder()
-                .setFilterByAuthorizedAccounts(false)
-                .setServerClientId(getString(R.string.web_client_id))
-                .build()
+            val googleIdOption = GetGoogleIdOption.Builder().setFilterByAuthorizedAccounts(false)
+                .setServerClientId(getString(R.string.web_client_id)).build()
 
-            val request = GetCredentialRequest.Builder()
-                .addCredentialOption(googleIdOption)
-                .build()
+            val request = GetCredentialRequest.Builder().addCredentialOption(googleIdOption).build()
 
             lifecycleScope.launch(Dispatchers.IO) {
                 try {
@@ -104,9 +95,7 @@ class LoginActivity : AppCompatActivity() {
                     } catch (e: GoogleIdTokenParsingException) {
                         dismissLoader()
                         Toast.makeText(
-                            this,
-                            "Authentication error: Invalid token format",
-                            Toast.LENGTH_SHORT
+                            this, "Authentication error: Invalid token format", Toast.LENGTH_SHORT
                         ).show()
                     }
                 }
@@ -131,9 +120,7 @@ class LoginActivity : AppCompatActivity() {
 
             is GetCredentialProviderConfigurationException -> {
                 Toast.makeText(
-                    this,
-                    "Configuration error. Please check app settings.",
-                    Toast.LENGTH_LONG
+                    this, "Configuration error. Please check app settings.", Toast.LENGTH_LONG
                 ).show()
             }
 
@@ -149,22 +136,22 @@ class LoginActivity : AppCompatActivity() {
 
     private fun firebaseAuthWithGoogle(idToken: String) {
         val credential = GoogleAuthProvider.getCredential(idToken, null)
-        auth.signInWithCredential(credential)
-            .addOnCompleteListener(this) { task ->
-                if (task.isSuccessful) {
-                    dismissLoader()
-                    navigateToProfile()
-                } else {
-                    dismissLoader()
-                    Toast.makeText(
-                        this,
-                        "Authentication failed: ${task.exception?.message}",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
+        auth.signInWithCredential(credential).addOnCompleteListener(this) { task ->
+            if (task.isSuccessful) {
+                dismissLoader()
+                navigateToProfile()
+            } else {
+                dismissLoader()
+                Toast.makeText(
+                    this,
+                    "Authentication failed: ${task.exception?.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
+        }
     }
 
+    @SuppressLint("CommitPrefEdits")
     private fun navigateToProfile() {
         val uid = auth.uid
 
@@ -174,40 +161,31 @@ class LoginActivity : AppCompatActivity() {
             return
         }
 
-        loader.title.text = "Checking Profile"
-        loader.dialog.show()
+        lifecycleScope.launch {
+            try {
+                val user = UserRepository.getUser()
+                if (user?.isProfileSetupComplete == true) {
 
-        userCollection.document(uid).get()
-            .addOnSuccessListener { doc ->
-                dismissLoader()
-                Toast.makeText(this, "Sign-in successful", Toast.LENGTH_SHORT).show()
-                if (doc.exists() && doc.getBoolean("isProfileSetupComplete") == true) {
-                    getSharedPreferences("VanamPrefs", MODE_PRIVATE).edit {
-                        putBoolean("isProfileComplete", true)
-                    }
-                    startActivity(Intent(this, Dashboard::class.java))
+                    sharedPrefs.edit().putBoolean("isProfileSetupComplete", true)
+
+                    startActivity(Intent(this@LoginActivity, Dashboard::class.java))
                 } else {
-                    startActivity(Intent(this, BasicActivity::class.java))
+                    startActivity(Intent(this@LoginActivity, BasicActivity::class.java))
                 }
                 finish()
-            }
-            .addOnFailureListener {
+            } catch (e: Exception) {
+                Toast.makeText(this@LoginActivity, "Failed to load profile", Toast.LENGTH_SHORT)
+                    .show()
+            } finally {
                 dismissLoader()
-                Toast.makeText(
-                    this,
-                    "Failed to fetch profile. Please try again.",
-                    Toast.LENGTH_SHORT
-                ).show()
             }
+        }
     }
 
     private fun showAccountSetupPrompt() {
         val accountManager = AccountManager.get(this)
         accountManager.addAccount(
-            "com.google",
-            null, null, null,
-            this,
-            { future ->
+            "com.google", null, null, null, this, { future ->
                 try {
                     val result = future.result
                     val accountName = result.getString(AccountManager.KEY_ACCOUNT_NAME)
@@ -217,17 +195,14 @@ class LoginActivity : AppCompatActivity() {
                         binding.continueWithGoogle.performClick()
                     } else {
                         Toast.makeText(
-                            this,
-                            "You need to add a Google account first.",
-                            Toast.LENGTH_SHORT
+                            this, "You need to add a Google account first.", Toast.LENGTH_SHORT
                         ).show()
                     }
                 } catch (_: Exception) {
                     Toast.makeText(this, "You cancelled the account setup.", Toast.LENGTH_SHORT)
                         .show()
                 }
-            },
-            null
+            }, null
         )
     }
 

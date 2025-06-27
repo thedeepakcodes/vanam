@@ -10,26 +10,25 @@ import androidx.core.graphics.toColorInt
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.SetOptions
-import `in`.qwicklabs.vanam.Dashboard
+import `in`.qwicklabs.vanam.activities.Dashboard
 import `in`.qwicklabs.vanam.databinding.ActivityCompleteGoalsBinding
+import `in`.qwicklabs.vanam.model.User
+import `in`.qwicklabs.vanam.repository.FirebaseRepository
+import `in`.qwicklabs.vanam.repository.UserRepository
 import `in`.qwicklabs.vanam.utils.Loader
+import kotlinx.coroutines.launch
 
 class GoalsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCompleteGoalsBinding
+    private var currentUser: User? = null
+    private val sharedPrefs by lazy { getSharedPreferences("VanamPrefs", MODE_PRIVATE) }
+
     private lateinit var gardeningPreferenceCards: List<MaterialCardView>
     private lateinit var commitmentDurationButtons: List<MaterialButton>
     private lateinit var loadingDialog: Loader
-
-    private val firebaseAuth: FirebaseAuth by lazy { FirebaseAuth.getInstance() }
-    private val firestoreInstance: FirebaseFirestore by lazy { FirebaseFirestore.getInstance() }
-    private val usersProfileCollection by lazy {
-        firestoreInstance.collection("Vanam").document("Users").collection("Profile")
-    }
 
     private var selectedGardeningPreferenceCardId: Int? = null
     private var selectedCommitmentDurationButtonId: Int? = null
@@ -56,9 +55,7 @@ class GoalsActivity : AppCompatActivity() {
         WindowCompat.getInsetsController(window, window.decorView).isAppearanceLightStatusBars =
             true
 
-        if (getSharedPreferences("VanamPrefs", MODE_PRIVATE)
-                .getBoolean("isProfileComplete", false)
-        ) {
+        if (sharedPrefs.getBoolean("isProfileSetupComplete", false)) {
             startActivity(Intent(this, Dashboard::class.java))
             finish()
             return
@@ -70,15 +67,13 @@ class GoalsActivity : AppCompatActivity() {
         setupCompleteButton()
 
         // Load previously saved user data
-        firebaseAuth.uid?.let { uid ->
-            usersProfileCollection.document(uid).get().addOnSuccessListener { documentSnapshot ->
-                if (documentSnapshot.exists()) {
-                    previousGardeningPreference = documentSnapshot.getString("gardeningPreference")
-                    previousCommitmentDuration = documentSnapshot.getLong("commitmentGoal")?.toInt()
-                    previousWeeklyHours = documentSnapshot.getLong("weeklyHours")?.toInt()
-                    prefillUserSelections()
-                }
-            }
+        lifecycleScope.launch {
+            currentUser = UserRepository.getUser()
+            previousGardeningPreference = currentUser?.gardeningType
+            previousCommitmentDuration = currentUser?.goalDeadlineDays
+            previousWeeklyHours = currentUser?.weeklyTimeCommitmentHours
+            prefillUserSelections()
+
         }
     }
 
@@ -199,9 +194,9 @@ class GoalsActivity : AppCompatActivity() {
                 dialog.show()
             }
 
-            val currentUserId = firebaseAuth.currentUser?.uid
+            val currentUserId = FirebaseRepository.getCurrentUserId()
 
-            if (currentUserId == null) {
+            if (currentUserId == "") {
                 loadingDialog.dialog.dismiss()
                 Toast.makeText(this, "Please Login to continue", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
@@ -217,9 +212,8 @@ class GoalsActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            val hasUserMadeChanges = gardeningPreference != previousGardeningPreference ||
-                    commitmentDuration != previousCommitmentDuration ||
-                    selectedWeeklyHours != previousWeeklyHours
+            val hasUserMadeChanges =
+                gardeningPreference != previousGardeningPreference || commitmentDuration != previousCommitmentDuration || selectedWeeklyHours != previousWeeklyHours
 
             if (!hasUserMadeChanges) {
                 loadingDialog.dialog.dismiss()
@@ -227,31 +221,30 @@ class GoalsActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            val updatedData = hashMapOf(
-                "gardeningPreference" to gardeningPreference,
-                "commitmentGoal" to commitmentDuration,
-                "weeklyHours" to selectedWeeklyHours,
-                "isProfileSetupComplete" to true
-            )
+            currentUser?.let {
+                it.gardeningType = gardeningPreference
+                it.goalDeadlineDays = commitmentDuration
+                it.weeklyTimeCommitmentHours = selectedWeeklyHours
+                it.isProfileSetupComplete = true
+            }
 
-            usersProfileCollection.document(currentUserId).set(updatedData, SetOptions.merge())
-                .addOnSuccessListener {
+            lifecycleScope.launch {
+                try {
+                    currentUser?.let { it1 -> UserRepository.updateUser(it1) }
                     loadingDialog.dialog.dismiss()
                     completeProfileAndNavigateToDashboard()
-                }
-                .addOnFailureListener { exception ->
+                } catch (e: Exception) {
                     loadingDialog.dialog.dismiss()
-                    Toast.makeText(this, "Failed to save: ${exception.message}", Toast.LENGTH_LONG)
-                        .show()
+                    Toast.makeText(
+                        this@GoalsActivity, "Failed to save: ${e.message}", Toast.LENGTH_LONG
+                    ).show()
                 }
+            }
         }
     }
 
     private fun completeProfileAndNavigateToDashboard() {
-        getSharedPreferences("VanamPrefs", MODE_PRIVATE).edit {
-            putBoolean("isProfileComplete", true)
-        }
-
+        sharedPrefs.edit { putBoolean("isProfileSetupComplete", true) }
         startActivity(Intent(this, Dashboard::class.java))
         finish()
     }

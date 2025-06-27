@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/dashboardBg"
     android:fitsSystemWindows="true"
-    tools:context=".EditProfile">
+    tools:context=".activities.EditProfile">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -117,6 +117,27 @@
             android:layout_height="wrap_content"
             android:background="@drawable/edittext_background"
             android:hint="Choose a username"
+            android:minHeight="48dp"
+            android:padding="12dp"
+            android:textColor="#000000"
+            android:textSize="16sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="16dp"
+            android:paddingBottom="8dp"
+            android:text="Phone Number"
+            android:textColor="#374151"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/phone_number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/edittext_background"
+            android:hint="Phone number without country code"
+            android:inputType="phone"
             android:minHeight="48dp"
             android:padding="12dp"
             android:textColor="#000000"

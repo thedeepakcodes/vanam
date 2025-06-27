@@ -1,20 +1,19 @@
-package `in`.qwicklabs.vanam
+package `in`.qwicklabs.vanam.activities
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
-import `in`.qwicklabs.vanam.databinding.ActivityPhoneSupportBinding
+import `in`.qwicklabs.vanam.R
+import `in`.qwicklabs.vanam.databinding.ActivityHelpCenterBinding
 
-class PhoneSupport : AppCompatActivity() {
-    private lateinit var binding: ActivityPhoneSupportBinding
+class HelpCenter : AppCompatActivity() {
+    private lateinit var binding: ActivityHelpCenterBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-
-        binding = ActivityPhoneSupportBinding.inflate(layoutInflater)
+        binding = ActivityHelpCenterBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         WindowCompat.getInsetsController(window, window.decorView).isAppearanceLightStatusBars =
@@ -28,23 +27,16 @@ class PhoneSupport : AppCompatActivity() {
             onBackPressedDispatcher.onBackPressed()
         }
 
-        binding.callGeneral.setOnClickListener {
-            dialNumber("+918001234567")
+        binding.emailSupport.setOnClickListener {
+            startActivity(Intent(this, EmailSupport::class.java))
         }
 
-        binding.callTech.setOnClickListener {
-            dialNumber("+918007654321")
+        binding.liveChatSupport.setOnClickListener {
+            startActivity(Intent(this, ChatSupport::class.java))
         }
 
-        binding.callBilling.setOnClickListener {
-            dialNumber("+918002468100")
+        binding.phoneSupport.setOnClickListener {
+            startActivity(Intent(this, PhoneSupport::class.java))
         }
-
-    }
-
-    private fun dialNumber(phone: String) {
-        val intent = Intent(Intent.ACTION_DIAL)
-        intent.data = Uri.parse("tel:$phone")
-        startActivity(intent)
     }
 }

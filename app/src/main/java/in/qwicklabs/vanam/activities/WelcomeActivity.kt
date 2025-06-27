@@ -1,4 +1,4 @@
-package `in`.qwicklabs.vanam
+package `in`.qwicklabs.vanam.activities
 
 import android.content.Intent
 import android.os.Bundle

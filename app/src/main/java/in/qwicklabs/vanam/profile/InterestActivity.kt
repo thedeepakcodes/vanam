@@ -12,26 +12,23 @@ import androidx.core.graphics.toColorInt
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.SetOptions
 import `in`.qwicklabs.vanam.databinding.ActivityInterestBinding
+import `in`.qwicklabs.vanam.model.User
+import `in`.qwicklabs.vanam.repository.UserRepository
 import `in`.qwicklabs.vanam.utils.Loader
+import kotlinx.coroutines.launch
 
 class InterestActivity : AppCompatActivity() {
     private lateinit var binding: ActivityInterestBinding
     private lateinit var loadingDialog: Loader
 
+    private val sharedPrefs by lazy { getSharedPreferences("VanamPrefs", MODE_PRIVATE) }
+
     private lateinit var treePreferenceCards: List<MaterialCardView>
     private lateinit var seasonOptionButtons: List<MaterialButton>
-
-    private val firebaseAuth: FirebaseAuth by lazy { FirebaseAuth.getInstance() }
-    private val firebaseFirestore: FirebaseFirestore by lazy { FirebaseFirestore.getInstance() }
-    private val userProfileCollection by lazy {
-        firebaseFirestore.collection("Vanam").document("Users").collection("Profile")
-    }
 
     private val unselectedColor = "#E6FFF2".toColorInt()
     private val highlightedColor = "#CCEBD7".toColorInt()
@@ -42,6 +39,7 @@ class InterestActivity : AppCompatActivity() {
     private var savedTreePreference: String? = null
     private var savedSeasonPreference: String? = null
     private var savedExperienceLevel: Int? = null
+    private var user: User? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,15 +53,12 @@ class InterestActivity : AppCompatActivity() {
             windowInsets
         }
 
-        WindowCompat.getInsetsController(window, window.decorView)
-            .isAppearanceLightStatusBars = true
+        WindowCompat.getInsetsController(window, window.decorView).isAppearanceLightStatusBars =
+            true
 
-        if (getSharedPreferences("VanamPrefs", MODE_PRIVATE)
-                .getBoolean("isProfileInterestComplete", false)
-        ) {
+        if (sharedPrefs.getBoolean("ProfileSetup_2", false)) {
             startActivity(Intent(this, ExpertiseActivity::class.java))
             finish()
-            return
         }
 
         setupTreePreferenceCards()
@@ -71,15 +66,12 @@ class InterestActivity : AppCompatActivity() {
         setupExperienceLevelSeekBar()
         setupSaveAndContinueButton()
 
-        firebaseAuth.uid?.let { userId ->
-            userProfileCollection.document(userId).get().addOnSuccessListener { document ->
-                if (document.exists()) {
-                    savedTreePreference = document.getString("preferredTree")
-                    savedSeasonPreference = document.getString("preferredSeason")
-                    savedExperienceLevel = document.getLong("experienceLevel")?.toInt()
-                    prefillSavedPreferences()
-                }
-            }
+        lifecycleScope.launch {
+            user = UserRepository.getUser()
+            savedTreePreference = user?.plantTypeInterest
+            savedSeasonPreference = user?.preferredSeason
+            savedExperienceLevel = user?.expRating
+            prefillSavedPreferences()
         }
     }
 
@@ -156,16 +148,13 @@ class InterestActivity : AppCompatActivity() {
             if (newTreePreference == null || newSeasonPreference == null) {
                 loadingDialog.dialog.dismiss()
                 Toast.makeText(
-                    this,
-                    "Please select a tree preference and planting season.",
-                    Toast.LENGTH_LONG
+                    this, "Please select a tree preference and planting season.", Toast.LENGTH_LONG
                 ).show()
                 return@setOnClickListener
             }
 
-            val hasChanges = newTreePreference != savedTreePreference ||
-                    newSeasonPreference != savedSeasonPreference ||
-                    newExperienceLevel != savedExperienceLevel
+            val hasChanges =
+                newTreePreference != savedTreePreference || newSeasonPreference != savedSeasonPreference || newExperienceLevel != savedExperienceLevel
 
             if (!hasChanges) {
                 loadingDialog.dialog.dismiss()
@@ -173,33 +162,31 @@ class InterestActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            val userPreferences = hashMapOf(
-                "preferredTree" to newTreePreference,
-                "preferredSeason" to newSeasonPreference,
-                "experienceLevel" to newExperienceLevel
-            )
+            user?.plantTypeInterest = newTreePreference
+            user?.preferredSeason = newSeasonPreference
+            user?.expRating = newExperienceLevel
 
-            firebaseAuth.uid?.let { userId ->
-                userProfileCollection.document(userId).set(userPreferences, SetOptions.merge())
-                    .addOnSuccessListener {
-                        loadingDialog.dialog.dismiss()
-                        markProfileCompleteAndProceed()
-                    }.addOnFailureListener { error ->
-                        loadingDialog.dialog.dismiss()
-                        Toast.makeText(
-                            this,
-                            "Failed to save profile: ${error.localizedMessage}",
-                            Toast.LENGTH_LONG
-                        ).show()
-                    }
+            lifecycleScope.launch {
+                try {
+                    user?.let { it1 -> UserRepository.updateUser(it1) }
+                    loadingDialog.dialog.dismiss()
+                    markProfileCompleteAndProceed()
+                } catch (e: Exception) {
+                    loadingDialog.dialog.dismiss()
+
+                    Toast.makeText(
+                        this@InterestActivity,
+                        "Failed to save profile: ${e.localizedMessage}",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
             }
         }
     }
 
     private fun markProfileCompleteAndProceed() {
-        getSharedPreferences("VanamPrefs", MODE_PRIVATE).edit {
-            putBoolean("isProfileInterestComplete", true)
-        }
+
+        sharedPrefs.edit() { putBoolean("ProfileSetup_2", true) }
 
         startActivity(Intent(this, ExpertiseActivity::class.java))
         finish()
