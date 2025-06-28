@@ -13,14 +13,11 @@ object FirebaseRepository {
     private val firestore by lazy { FirebaseFirestore.getInstance() }
     private val storage by lazy { FirebaseStorage.getInstance() }
 
-    // Global Firestore access
-    fun getFirestoreInstance(): FirebaseFirestore = firestore
-
-    // Global Storage access
-    fun getStorageInstance(): FirebaseStorage = storage
-
     // User Authentication
     fun getAuthInstance(): FirebaseAuth = auth
+
+    // Firestore
+    fun getFirestoreInstance(): FirebaseFirestore = firestore
 
     // Get current logged-in user ID
     fun getCurrentUserId(): String {
@@ -30,6 +27,15 @@ object FirebaseRepository {
     // User document reference
     fun getUserDocRef(): DocumentReference {
         return firestore.collection("v_Users").document(getCurrentUserId())
+    }
+
+    // Tree document reference
+    fun getTreeDocRef(treeId: String): DocumentReference {
+        return firestore.collection("v_Trees").document(treeId)
+    }
+
+    fun getUserTreeDocRef(treeId: String): DocumentReference {
+        return getUserDocRef().collection("trees").document(treeId)
     }
 
     // Subcollection of trees under user
@@ -42,16 +48,6 @@ object FirebaseRepository {
         return firestore.collection("v_Trees")
     }
 
-    // Community posts collection
-    fun getPostsCollection(): CollectionReference {
-        return firestore.collection("v_Posts")
-    }
-
-    // Likes subcollection under a post
-    fun getPostLikesCollection(postId: String): CollectionReference {
-        return getPostsCollection().document(postId).collection("likes")
-    }
-
     // Tree image storage reference
     fun getTreeImageStorageRef(treeId: String): StorageReference {
         return storage.reference.child("Vanam/trees/${getCurrentUserId()}/$treeId/")
@@ -60,10 +56,5 @@ object FirebaseRepository {
     // User profile image storage reference
     fun getUserProfileImageRef(): StorageReference {
         return storage.reference.child("Vanam/profiles/${getCurrentUserId()}.jpg")
-    }
-
-    // Post image storage reference
-    fun getPostImageStorageRef(postId: String): StorageReference {
-        return storage.reference.child("Vanam/posts/$postId.jpg")
     }
 }

@@ -6,23 +6,23 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import `in`.qwicklabs.vanam.R
 import `in`.qwicklabs.vanam.databinding.ActivityEditProfileBinding
-import `in`.qwicklabs.vanam.model.User
 import `in`.qwicklabs.vanam.repository.FirebaseRepository
-import `in`.qwicklabs.vanam.repository.UserRepository
 import `in`.qwicklabs.vanam.utils.Loader
+import `in`.qwicklabs.vanam.viewModel.UserViewModel
 import kotlinx.coroutines.launch
 
 class EditProfile : AppCompatActivity() {
 
     private lateinit var binding: ActivityEditProfileBinding
+    private val userViewModel: UserViewModel by viewModels()
     private lateinit var loader: Loader
-    private var currentUser: User? = null
 
     private var profileUri: Uri? = null
     private var isImageSelected = false
@@ -57,24 +57,28 @@ class EditProfile : AppCompatActivity() {
     private fun loadUserData() {
         lifecycleScope.launch {
             try {
-                currentUser = UserRepository.getUser()
+                userViewModel.user.observe(this@EditProfile) { user ->
 
-                if (currentUser !== null) {
-                    binding.etFullName.setText(currentUser?.name)
-                    binding.username.setText(currentUser?.username)
-                    binding.etBio.setText(currentUser?.bio)
-                    binding.phoneNumber.setText(currentUser?.phoneNumber)
+                    if (user !== null) {
+                        binding.etFullName.setText(user.name)
+                        binding.username.setText(user.username)
+                        binding.etBio.setText(user.bio)
+                        binding.phoneNumber.setText(user.phoneNumber)
 
-                    val imageUrl = currentUser?.photoUrl
-                    Glide.with(this@EditProfile)
-                        .load(imageUrl)
-                        .placeholder(R.drawable.circular_loader)
-                        .error(R.drawable.profile_sample)
-                        .circleCrop()
-                        .into(binding.profileImage)
-                } else {
-                    Toast.makeText(this@EditProfile, "User profile not found.", Toast.LENGTH_SHORT)
-                        .show()
+                        val imageUrl = user.photoUrl
+                        Glide.with(this@EditProfile)
+                            .load(imageUrl)
+                            .placeholder(R.drawable.circular_loader)
+                            .error(R.drawable.profile_sample)
+                            .circleCrop()
+                            .into(binding.profileImage)
+                    } else {
+                        Toast.makeText(
+                            this@EditProfile,
+                            "User profile not found.",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 }
             } catch (e: Exception) {
                 Toast.makeText(this@EditProfile, "Error loading profile data.", Toast.LENGTH_SHORT)
@@ -117,10 +121,10 @@ class EditProfile : AppCompatActivity() {
 
         if (isImageSelected && profileUri != null) {
             uploadProfileImage(profileUri!!) { imageUrl ->
-                saveUserData(userId, fullName, username, bio, phoneNo, imageUrl)
+                saveUserData(fullName, username, bio, phoneNo, imageUrl)
             }
         } else {
-            saveUserData(userId, fullName, username, bio, phoneNo, null)
+            saveUserData(fullName, username, bio, phoneNo, null)
         }
     }
 
@@ -144,25 +148,27 @@ class EditProfile : AppCompatActivity() {
     }
 
     private fun saveUserData(
-        userId: String,
         fullName: String,
         username: String,
         bio: String,
         phoneNo: String,
         imageUrl: String?
     ) {
-        currentUser?.name = fullName
-        currentUser?.username = username
-        currentUser?.bio = bio
-        currentUser?.phoneNumber = phoneNo
+        val currentUser = userViewModel.user.value
 
-        if (!imageUrl.isNullOrEmpty()) {
-            currentUser?.photoUrl = imageUrl
-        }
+        if (currentUser !== null) {
+            currentUser.name = fullName
+            currentUser.username = username
+            currentUser.bio = bio
+            currentUser.phoneNumber = phoneNo
 
-        lifecycleScope.launch {
+            if (!imageUrl.isNullOrEmpty()) {
+                currentUser.photoUrl = imageUrl
+            }
+
             try {
-                currentUser?.let { UserRepository.updateUser(it) }
+                userViewModel.updateUser(currentUser)
+
                 loader.dialog.dismiss()
                 Toast.makeText(
                     this@EditProfile,
@@ -170,6 +176,7 @@ class EditProfile : AppCompatActivity() {
                     Toast.LENGTH_SHORT
                 ).show()
                 finish()
+
             } catch (e: Exception) {
                 loader.dialog.dismiss()
                 Toast.makeText(this@EditProfile, "Failed to save profile.", Toast.LENGTH_SHORT)

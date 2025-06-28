@@ -4,9 +4,12 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.edit
+import androidx.lifecycle.lifecycleScope
 import `in`.qwicklabs.vanam.databinding.ActivitySplashBinding
 import `in`.qwicklabs.vanam.profile.BasicActivity
 import `in`.qwicklabs.vanam.repository.FirebaseRepository
+import `in`.qwicklabs.vanam.repository.UserRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -39,9 +42,20 @@ class SplashActivity : AppCompatActivity() {
         } else {
             if (sharedPrefs.getBoolean("isProfileSetupComplete", false)) {
                 startActivity(Intent(this@SplashActivity, Dashboard::class.java))
-            } else {
-                startActivity(Intent(this@SplashActivity, BasicActivity::class.java))
                 finish()
+            } else {
+                lifecycleScope.launch {
+                    val user = UserRepository.getUser()
+
+                    if (user?.isProfileSetupComplete == true) {
+                        sharedPrefs.edit { putBoolean("isProfileSetupComplete", true) }
+                        startActivity(Intent(this@SplashActivity, Dashboard::class.java))
+                        finish()
+                    } else {
+                        startActivity(Intent(this@SplashActivity, BasicActivity::class.java))
+                        finish()
+                    }
+                }
             }
         }
     }

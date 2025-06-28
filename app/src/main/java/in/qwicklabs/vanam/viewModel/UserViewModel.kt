@@ -31,13 +31,6 @@ class UserViewModel : ViewModel() {
         }
     }
 
-    fun refreshUser() {
-        viewModelScope.launch {
-            val user = UserRepository.getUser()
-            user?.let { _user.value = it }
-        }
-    }
-
     override fun onCleared() {
         super.onCleared()
         userListener?.remove()
