@@ -26,5 +26,16 @@ object UserRepository {
     suspend fun deleteUser() {
         FirebaseRepository.getUserDocRef().delete().await()
     }
+
+    suspend fun incrementTreeCountAndCoins() {
+        val user = getUser()
+        if (user != null) {
+            val newTreeCount = user.treesCount + 1
+            val newCoins = user.greenCoins + 100
+
+            val updatedUser = user.copy(treesCount = newTreeCount, greenCoins = newCoins)
+            updateUser(updatedUser)
+        }
+    }
 }
 

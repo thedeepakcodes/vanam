@@ -22,10 +22,12 @@ import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
+import com.google.firebase.Timestamp
 import `in`.qwicklabs.vanam.R
 import `in`.qwicklabs.vanam.databinding.ActivityUploadTreeBinding
 import `in`.qwicklabs.vanam.model.Tree
 import `in`.qwicklabs.vanam.repository.FirebaseRepository
+import `in`.qwicklabs.vanam.repository.UserRepository
 import `in`.qwicklabs.vanam.utils.UtilityFunctions
 import `in`.qwicklabs.vanam.viewModel.TreeViewModel
 import kotlinx.coroutines.Dispatchers
@@ -45,6 +47,9 @@ import java.util.concurrent.TimeUnit
 
 class UploadTree : AppCompatActivity() {
     private lateinit var binding: ActivityUploadTreeBinding
+
+    private val treeViewModel: TreeViewModel by viewModels()
+
     private lateinit var pickImageLauncher: ActivityResultLauncher<String>
     private lateinit var takePhotoLauncher: ActivityResultLauncher<Intent>
     private lateinit var fusedLocationClient: FusedLocationProviderClient
@@ -52,6 +57,7 @@ class UploadTree : AppCompatActivity() {
     private var isLivePhoto: Boolean = false
     private var isVerified: Boolean = false
     private var isInternalAIError: Boolean = false
+
     private lateinit var plantData: JSONObject
 
     private val client = OkHttpClient.Builder()
@@ -59,8 +65,6 @@ class UploadTree : AppCompatActivity() {
         .readTimeout(60, TimeUnit.SECONDS)
         .writeTimeout(30, TimeUnit.SECONDS)
         .build()
-
-    private val treeViewModel: TreeViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -263,8 +267,7 @@ class UploadTree : AppCompatActivity() {
         actionButtonsStatus(false)
         showAiFeedback("AI analysis in progress...", true)
 
-        withContext(Dispatchers.IO) {
-            val prompt = """
+        val prompt = """
             You are a plant verification assistant.
             You will be shown a base64-encoded image. Your job is to determine whether it shows a **real, physical tree or plant**, planted by a **person** (e.g. a sapling in the ground, a tree with visible soil, tags, or signs of human care like pots or fencing).
             
@@ -278,6 +281,8 @@ class UploadTree : AppCompatActivity() {
               "nativeRegion": "...",
               "averageCO2SavingKg": 123.4
             }
+            
+            averageCO2SavingKg is measured annually and varies based on the approx age of the tree.
             
             🚫 If the image is:
             - A drawing, cartoon, vector, illustration, or animation
@@ -297,6 +302,7 @@ class UploadTree : AppCompatActivity() {
     
             
             """.trimIndent()
+        withContext(Dispatchers.IO) {
 
             val body = JSONObject().put(
                 "contents", JSONArray().put(
@@ -461,9 +467,17 @@ class UploadTree : AppCompatActivity() {
                 val imageUrl = uploadImageToFirebase(tree.id, base64Image!!)
 
                 tree.imageUrl = imageUrl
+
                 treeViewModel.addTree(tree)
+                if (isVerified) {
+                    UserRepository.incrementTreeCountAndCoins()
+                }
 
                 showToast("Tree uploaded successfully!")
+
+                val resultIntent = Intent()
+                resultIntent.putExtra("new_tree", tree)
+                setResult(RESULT_OK, resultIntent)
                 finish()
             } catch (e: Exception) {
                 showToast("Upload failed: ${e.message}")
@@ -504,7 +518,7 @@ class UploadTree : AppCompatActivity() {
 
         tree.isLivePhoto = isLivePhoto
         tree.isVerified = isVerified
-        tree.timestamp = System.currentTimeMillis()
+        tree.timestamp = Timestamp.now()
         tree.userId = FirebaseRepository.getCurrentUserId()
 
         if (tree.latitude == null || tree.longitude == null || tree.commonName!!.isEmpty() || tree.scientificName!!.isEmpty() || tree.userId.isNullOrEmpty()) {

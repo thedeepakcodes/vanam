@@ -9,8 +9,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
 import `in`.qwicklabs.vanam.R
+import `in`.qwicklabs.vanam.activities.MyTrees
 import `in`.qwicklabs.vanam.activities.UploadTree
 import `in`.qwicklabs.vanam.databinding.FragmentHomeBinding
+import `in`.qwicklabs.vanam.utils.UtilityFunctions
 import `in`.qwicklabs.vanam.viewModel.UserViewModel
 import java.util.Calendar
 
@@ -33,9 +35,17 @@ class Home : Fragment() {
         observeUserData()
 
         // Handle Click Listeners
-        binding.addTree.setOnClickListener {
-            startActivity(Intent(view.context, UploadTree::class.java))
+        binding.apply {
+            addTree.setOnClickListener {
+                startActivity(Intent(view.context, UploadTree::class.java))
+            }
+
+            myTrees.setOnClickListener {
+                startActivity(Intent(view.context, MyTrees::class.java))
+            }
         }
+
+
     }
 
     private fun observeUserData() {
@@ -48,9 +58,11 @@ class Home : Fragment() {
                     .circleCrop().into(binding.ivProfilePicture)
 
                 binding.tvUserFirstName.text = firstName
-                binding.tvTreesPlantedCount.text = user.treesCount.toString()
+                binding.tvTreesPlantedCount.text =
+                    UtilityFunctions.formatNumberShort(user.treesCount.toString())
                 binding.tvDayStreakCount.text = user.dayStreak.toString()
-                binding.tvGreenCoinsCount.text = user.greenCoins.toString()
+                binding.tvGreenCoinsCount.text =
+                    UtilityFunctions.formatNumberShort(user.greenCoins.toString())
             } else {
                 binding.tvUserFirstName.text = "Guest"
             }

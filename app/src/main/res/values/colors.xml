@@ -11,6 +11,7 @@
     <color name="unselected_card_background">#E6FFF2</color>
     <color name="highlighted_card_background">#CCEBD7</color>
     <color name="error_text_color">#B00020</color>
+    <color name="warning_text_color">#FFA500</color>
 
     <!-- Grayscale -->
     <color name="gray_900">#212121</color>

@@ -12,6 +12,7 @@ import `in`.qwicklabs.vanam.R
 import `in`.qwicklabs.vanam.activities.EditProfile
 import `in`.qwicklabs.vanam.activities.Settings
 import `in`.qwicklabs.vanam.databinding.FragmentProfileBinding
+import `in`.qwicklabs.vanam.utils.UtilityFunctions
 import `in`.qwicklabs.vanam.viewModel.UserViewModel
 
 class Profile : Fragment() {
@@ -57,11 +58,17 @@ class Profile : Fragment() {
                     .circleCrop()
                     .into(binding.profileImage)
 
-                binding.coinCount.text = user.greenCoins.toString()
-                binding.toolbarCoinCount.text = user.greenCoins.toString()
-                "${user.treesCount} Trees".also { binding.treeCount.text = it }
+                binding.coinCount.text =
+                    UtilityFunctions.formatNumberShort(user.greenCoins.toString())
+                binding.toolbarCoinCount.text =
+                    UtilityFunctions.formatNumberShort(user.greenCoins.toString())
+                "${UtilityFunctions.formatNumberShort(user.treesCount.toString())} Trees".also {
+                    binding.treeCount.text = it
+                }
                 "${user.badges.size} Badges".also { binding.badgeCount.text = it }
-                "${user.postCount} Posts".also { binding.postsCount.text = it }
+                "${UtilityFunctions.formatNumberShort(user.postCount.toString())} Posts".also {
+                    binding.postsCount.text = it
+                }
             }
         }
     }
