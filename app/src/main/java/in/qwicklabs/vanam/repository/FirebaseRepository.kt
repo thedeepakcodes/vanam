@@ -16,9 +16,6 @@ object FirebaseRepository {
     // User Authentication
     fun getAuthInstance(): FirebaseAuth = auth
 
-    // Firestore
-    fun getFirestoreInstance(): FirebaseFirestore = firestore
-
     // Get current logged-in user ID
     fun getCurrentUserId(): String {
         return auth.currentUser?.uid ?: ""
@@ -29,18 +26,9 @@ object FirebaseRepository {
         return firestore.collection("v_Users").document(getCurrentUserId())
     }
 
-    // Tree document reference
-    fun getTreeDocRef(treeId: String): DocumentReference {
-        return firestore.collection("v_Trees").document(treeId)
-    }
-
-    fun getUserTreeDocRef(treeId: String): DocumentReference {
-        return getUserDocRef().collection("trees").document(treeId)
-    }
-
-    // Subcollection of trees under user
-    fun getUserTreesCollection(): CollectionReference {
-        return getUserDocRef().collection("trees")
+    // User collection reference
+    fun getUserCollection(): CollectionReference {
+        return firestore.collection("v_Users")
     }
 
     // Global trees collection (for feed)

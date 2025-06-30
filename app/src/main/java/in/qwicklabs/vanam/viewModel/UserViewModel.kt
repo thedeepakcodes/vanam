@@ -13,6 +13,9 @@ class UserViewModel : ViewModel() {
     private val _user = MutableLiveData<User>()
     val user: LiveData<User> get() = _user
 
+    private val _users = MutableLiveData<List<User>>()
+    val users: LiveData<List<User>> get() = _users
+
     private var userListener: ListenerRegistration? = null
 
     init {
@@ -28,6 +31,29 @@ class UserViewModel : ViewModel() {
     fun updateUser(user: User) {
         viewModelScope.launch {
             UserRepository.updateUser(user)
+        }
+    }
+
+    fun getUsersByTreesCount() {
+        viewModelScope.launch {
+            val users = UserRepository.getUsersByTreesCount()
+            _users.postValue(users)
+        }
+    }
+
+    fun getUsersByGreenCoins() {
+        viewModelScope.launch {
+            val users = UserRepository.getUsersByGreenCoins()
+            _users.postValue(users)
+        }
+    }
+
+    fun getUser() {
+        viewModelScope.launch {
+            val user = UserRepository.getUser()
+            if (user != null) {
+                _user.postValue(user!!)
+            }
         }
     }
 

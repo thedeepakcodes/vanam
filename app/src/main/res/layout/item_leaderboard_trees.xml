@@ -2,43 +2,43 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:layout_marginTop="20dp">
+    android:layout_height="wrap_content"
+    android:background="@color/dashboardBg"
+    android:orientation="vertical">
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/leaderboard_card_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="6dp"
         android:layout_marginHorizontal="12dp"
+        android:layout_marginVertical="5dp"
         app:cardCornerRadius="12dp"
-        app:cardElevation="3dp">
+        app:cardElevation="1dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:padding="12dp"
-            android:gravity="center_vertical">
+            android:padding="12dp">
 
             <TextView
-                android:id="@+id/tvRank4"
-                android:layout_width="30dp"
+                android:id="@+id/text_view_rank"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="#4"
-                android:textStyle="bold"
+                android:gravity="center"
+                android:minWidth="30dp"
                 android:textColor="#9CA3AF"
                 android:textSize="16sp"
-                android:gravity="center" />
+                android:textStyle="bold" />
 
             <ImageView
-                android:id="@+id/imgProfile"
+                android:id="@+id/image_view_profile"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:layout_marginStart="8dp"
-                android:src="@drawable/profile_sample"
-                android:scaleType="centerCrop"
-                android:background="@drawable/profile_circle" />
+                android:layout_marginStart="12dp"
+                android:background="@drawable/profile_circle"
+                android:scaleType="centerCrop" />
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -48,177 +48,35 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/tvUsername"
+                    android:id="@+id/text_view_username"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Meera Patel"
+                    android:ellipsize="end"
+                    android:maxLines="1"
                     android:textColor="@android:color/black"
-                    android:textStyle="bold"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/tvLocation"
+                    android:id="@+id/text_view_country"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Mumbai, India"
+                    android:ellipsize="end"
+                    android:maxLines="1"
                     android:textColor="#6B7280"
                     android:textSize="12sp" />
             </LinearLayout>
 
             <TextView
-                android:id="@+id/tvTreeCount"
+                android:id="@+id/text_view_tree_count"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/trees_planted"
-                android:drawablePadding="4dp"
-                android:text="47"
-                android:textColor="@color/black"
-                android:textStyle="bold"
-                android:textSize="14sp" />
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
-
-    <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="6dp"
-        android:layout_marginHorizontal="12dp"
-        app:cardCornerRadius="12dp"
-        app:cardElevation="3dp">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="12dp"
-            android:gravity="center_vertical">
-
-            <TextView
-                android:id="@+id/tvRank5"
-                android:layout_width="30dp"
-                android:layout_height="wrap_content"
-                android:text="#5"
-                android:textStyle="bold"
-                android:textColor="#9CA3AF"
-                android:textSize="16sp"
-                android:gravity="center" />
-
-            <ImageView
-                android:id="@+id/imgProfile2"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_marginStart="8dp"
-                android:src="@drawable/profile_sample"
-                android:scaleType="centerCrop"
-                android:background="@drawable/profile_circle" />
-
-            <LinearLayout
-                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/tvUsername2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Vikram Singh"
-                    android:textColor="@android:color/black"
-                    android:textStyle="bold"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:id="@+id/tvLocation2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Delhi, India"
-                    android:textColor="#6B7280"
-                    android:textSize="12sp" />
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/tvTreeCount2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:drawableLeft="@drawable/trees_planted"
-                android:drawablePadding="4dp"
-                android:text="45"
+                android:drawablePadding="6dp"
                 android:textColor="@color/black"
-                android:textStyle="bold"
-                android:textSize="14sp" />
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
-
-    <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="6dp"
-        android:layout_marginHorizontal="12dp"
-        app:cardCornerRadius="12dp"
-        app:cardElevation="3dp">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="12dp"
-            android:gravity="center_vertical">
-
-            <TextView
-                android:id="@+id/tvRank6"
-                android:layout_width="30dp"
-                android:layout_height="wrap_content"
-                android:text="#6"
-                android:textStyle="bold"
-                android:textColor="#9CA3AF"
-                android:textSize="16sp"
-                android:gravity="center" />
-
-            <ImageView
-                android:id="@+id/imgProfile3"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_marginStart="8dp"
-                android:src="@drawable/profile_sample"
-                android:scaleType="centerCrop"
-                android:background="@drawable/profile_circle" />
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/tvUsername3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Anjali Kumari"
-                    android:textColor="@android:color/black"
-                    android:textStyle="bold"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:id="@+id/tvLocation3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Bangalore, India"
-                    android:textColor="#6B7280"
-                    android:textSize="12sp" />
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/tvTreeCount3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/trees_planted"
-                android:drawablePadding="4dp"
-                android:text="42"
-                android:textColor="@color/black"
-                android:textStyle="bold"
-                android:textSize="14sp" />
+                android:textSize="15sp"
+                android:textStyle="bold" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 </LinearLayout>

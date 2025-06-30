@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
 import `in`.qwicklabs.vanam.R
+import `in`.qwicklabs.vanam.activities.LeaderBoard
 import `in`.qwicklabs.vanam.activities.MyTrees
 import `in`.qwicklabs.vanam.activities.UploadTree
 import `in`.qwicklabs.vanam.databinding.FragmentHomeBinding
@@ -43,9 +44,11 @@ class Home : Fragment() {
             myTrees.setOnClickListener {
                 startActivity(Intent(view.context, MyTrees::class.java))
             }
+
+            leaderboard.setOnClickListener {
+                startActivity(Intent(view.context, LeaderBoard::class.java))
+            }
         }
-
-
     }
 
     private fun observeUserData() {

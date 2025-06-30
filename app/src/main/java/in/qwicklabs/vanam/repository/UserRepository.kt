@@ -23,6 +23,7 @@ object UserRepository {
         return snapshot.toObject(User::class.java)
     }
 
+
     suspend fun deleteUser() {
         FirebaseRepository.getUserDocRef().delete().await()
     }
@@ -36,6 +37,26 @@ object UserRepository {
             val updatedUser = user.copy(treesCount = newTreeCount, greenCoins = newCoins)
             updateUser(updatedUser)
         }
+    }
+
+    suspend fun getUsersByTreesCount(): List<User> {
+        val snapshot = FirebaseRepository.getUserCollection()
+            .orderBy("treesCount")
+            .get()
+            .await()
+
+        return snapshot.documents.mapNotNull { it.toObject(User::class.java) }
+            .sortedByDescending { it.treesCount }
+    }
+
+    suspend fun getUsersByGreenCoins(): List<User> {
+        val snapshot = FirebaseRepository.getUserCollection()
+            .orderBy("greenCoins")
+            .get()
+            .await()
+
+        return snapshot.documents.mapNotNull { it.toObject(User::class.java) }
+            .sortedByDescending { it.greenCoins }
     }
 }
 

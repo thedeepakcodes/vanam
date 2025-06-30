@@ -48,7 +48,6 @@ class LoginActivity : AppCompatActivity() {
 
         loader = Loader(this)
 
-        /** Adding dynamic padding from Bottom to Footer text **/
         ViewCompat.setOnApplyWindowInsetsListener(binding.footerText) { view, windowInsets ->
             val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
             binding.footerText.setPadding(
