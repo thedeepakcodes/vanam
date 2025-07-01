@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.firestore.ListenerRegistration
+import `in`.qwicklabs.vanam.model.OrderItem
 import `in`.qwicklabs.vanam.model.User
 import `in`.qwicklabs.vanam.repository.UserRepository
 import kotlinx.coroutines.launch
@@ -53,6 +54,21 @@ class UserViewModel : ViewModel() {
             val user = UserRepository.getUser()
             if (user != null) {
                 _user.postValue(user!!)
+            }
+        }
+    }
+
+    fun addOrder(
+        order: OrderItem,
+        onSuccess: () -> Unit = {},
+        onFailure: (Exception) -> Unit = {}
+    ) {
+        viewModelScope.launch {
+            try {
+                UserRepository.addOrder(order)
+                onSuccess()
+            } catch (e: Exception) {
+                onFailure(e)
             }
         }
     }

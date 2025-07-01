@@ -118,15 +118,23 @@ class LeaderBoard : AppCompatActivity() {
 
                 Glide.with(this).load(currentUser?.photoUrl).circleCrop().into(binding.myPhoto)
                 binding.myRank.text = "Your Rank: #$userRank"
-                val treeCountDifferenceFromTopper = users[0].treesCount - currentUser.treesCount
-                val greenCoinsDifferenceFromTopper = users[0].greenCoins - currentUser.greenCoins
 
-                binding.myRankProgress.progress =
-                    (currentUser.treesCount / users[0].treesCount) * 100
+                val myProgress =
+                    if (sortBy == "trees") currentUser?.treesCount else currentUser?.greenCoins
+                val totalProgress =
+                    if (sortBy == "trees") users[0].treesCount else users[0].greenCoins
 
+                if (myProgress != null && totalProgress > 0) {
+                    val progressPercentage =
+                        (myProgress.toDouble() / totalProgress.toDouble()) * 100
+                    binding.myRankProgress.progress = progressPercentage.toInt().coerceIn(0, 100)
+                } else {
+                    binding.myRankProgress.progress = 0
+                }
+                
                 binding.myRankText.text = when (sortBy) {
-                    "trees" -> "You're doing amazing! Only $treeCountDifferenceFromTopper more trees to reach the top!"
-                    "coins" -> "Great job! Just $greenCoinsDifferenceFromTopper more green coins to become #1!"
+                    "trees" -> "You're doing amazing! Only ${users[0].treesCount - currentUser.treesCount} more trees to reach the top!"
+                    "coins" -> "Great job! Just ${users[0].greenCoins - currentUser.greenCoins} more green coins to become #1!"
                     else -> ""
                 }
 

@@ -253,7 +253,6 @@
                 android:layout_height="8dp"
                 android:layout_marginBottom="6dp"
                 android:backgroundTint="@android:color/transparent"
-                android:progress="0"
                 android:progressDrawable="@drawable/progress_bar"
                 android:progressTint="@color/primary" />
 

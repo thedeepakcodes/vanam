@@ -11,6 +11,7 @@ import com.bumptech.glide.Glide
 import `in`.qwicklabs.vanam.R
 import `in`.qwicklabs.vanam.activities.LeaderBoard
 import `in`.qwicklabs.vanam.activities.MyTrees
+import `in`.qwicklabs.vanam.activities.RewardsStore
 import `in`.qwicklabs.vanam.activities.UploadTree
 import `in`.qwicklabs.vanam.databinding.FragmentHomeBinding
 import `in`.qwicklabs.vanam.utils.UtilityFunctions
@@ -47,6 +48,10 @@ class Home : Fragment() {
 
             leaderboard.setOnClickListener {
                 startActivity(Intent(view.context, LeaderBoard::class.java))
+            }
+
+            store.setOnClickListener {
+                startActivity(Intent(view.context, RewardsStore::class.java))
             }
         }
     }

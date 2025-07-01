@@ -1,6 +1,7 @@
 package `in`.qwicklabs.vanam.repository
 
 import com.google.firebase.firestore.ListenerRegistration
+import `in`.qwicklabs.vanam.model.OrderItem
 import `in`.qwicklabs.vanam.model.User
 import kotlinx.coroutines.tasks.await
 
@@ -58,5 +59,13 @@ object UserRepository {
         return snapshot.documents.mapNotNull { it.toObject(User::class.java) }
             .sortedByDescending { it.greenCoins }
     }
+
+    suspend fun addOrder(order: OrderItem) {
+        FirebaseRepository.getUserOrdersCollection()
+            .document(order.id)
+            .set(order)
+            .await()
+    }
+
 }
 

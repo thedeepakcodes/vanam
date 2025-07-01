@@ -45,4 +45,14 @@ object FirebaseRepository {
     fun getUserProfileImageRef(): StorageReference {
         return storage.reference.child("Vanam/profiles/${getCurrentUserId()}.jpg")
     }
+
+    // Store collection
+    fun getStoreCollection(): CollectionReference {
+        return firestore.collection("v_store")
+    }
+
+    // User Orders collection
+    fun getUserOrdersCollection(): CollectionReference {
+        return firestore.collection("v_Orders")
+    }
 }
