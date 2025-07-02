@@ -67,4 +67,5 @@ dependencies {
     implementation(libs.glide)
     implementation(libs.jbcrypt)
     implementation(libs.okhttp)
+    implementation(libs.material)
 }

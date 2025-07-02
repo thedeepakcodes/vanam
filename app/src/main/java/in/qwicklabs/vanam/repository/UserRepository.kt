@@ -60,6 +60,11 @@ object UserRepository {
             .sortedByDescending { it.greenCoins }
     }
 
+    suspend fun getUserById(userId: String): User?{
+        val snapshot = FirebaseRepository.getUserCollection().document(userId).get().await()
+        return snapshot.toObject(User::class.java)
+    }
+
     suspend fun addOrder(order: OrderItem) {
         FirebaseRepository.getUserOrdersCollection()
             .document(order.id)

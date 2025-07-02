@@ -1,60 +1,207 @@
 package `in`.qwicklabs.vanam.fragments
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
-import `in`.qwicklabs.vanam.R
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import `in`.qwicklabs.vanam.adapter.PostsAdapter
+import `in`.qwicklabs.vanam.databinding.BottomsheetCreatePostBinding
+import `in`.qwicklabs.vanam.databinding.FragmentCommunityBinding
+import `in`.qwicklabs.vanam.model.PostItem
+import `in`.qwicklabs.vanam.repository.FirebaseRepository
+import `in`.qwicklabs.vanam.utils.UtilityFunctions
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
+import java.util.UUID
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [Community.newInstance] factory method to
- * create an instance of this fragment.
- */
 class Community : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    private lateinit var binding: FragmentCommunityBinding
+    private lateinit var adapter: PostsAdapter
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private lateinit var bottomSheetDialog: BottomSheetDialog
+    private lateinit var createPostBinding: BottomsheetCreatePostBinding
+    private lateinit var browseImageLauncher: ActivityResultLauncher<String>
+
+    private var uploadedImage: Uri? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_community, container, false)
+    ): View {
+        binding = FragmentCommunityBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment Community.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            Community().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        browseImageLauncher = registerForActivityResult(ActivityResultContracts.GetContent()){uri->
+            uri?.let {
+                createPostBinding.imagePreview.setImageURI(it)
+                uploadedImage = it
+                createPostBinding.imagePreviewContent.visibility = View.VISIBLE
+                createPostBinding.imagePreviewBrowseText.text = "Change Image"
             }
+        }
+
+        setupRecycler()
+        setUpCreatePost()
+
+        lifecycleScope.launch {
+            loadPosts()
+        }
+
+        binding.apply {
+            toolbar.setNavigationOnClickListener {
+                requireActivity().onBackPressedDispatcher.onBackPressed()
+            }
+
+            newPost.setOnClickListener {
+                bottomSheetDialog.show()
+            }
+
+            search.addTextChangedListener(object: TextWatcher{
+                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+                }
+
+                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                }
+
+                override fun afterTextChanged(s: Editable?) {
+                    val newText = s.toString()
+                    adapter.searchPosts(newText)
+                }
+            })
+        }
+    }
+
+    private fun setupRecycler() {
+        adapter = PostsAdapter(mutableListOf())
+        binding.recyclerView.adapter = adapter
+        binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        binding.recyclerView.setHasFixedSize(true)
+    }
+
+    private suspend fun loadPosts() {
+        val posts = FirebaseRepository.getPostCollection().get().await()
+        val postItems = posts.mapNotNull { it.toObject(PostItem::class.java) }
+
+        adapter.updatePostItems(postItems)
+    }
+
+    private fun setUpCreatePost(){
+        bottomSheetDialog = BottomSheetDialog(requireContext())
+        createPostBinding = BottomsheetCreatePostBinding.inflate(layoutInflater)
+        bottomSheetDialog.setContentView(createPostBinding.root)
+
+        createPostBinding.imagePreviewBrowse.setOnClickListener {
+            browseImageLauncher.launch("image/*")
+        }
+
+        createPostBinding.imagePreviewClear.setOnClickListener {
+            resetDialogImage()
+        }
+
+        createPostBinding.close.setOnClickListener {
+            bottomSheetDialog.dismiss()
+            resetDialogImage()
+            createPostBinding.content.text.clear()
+        }
+
+        createPostBinding.publish.setOnClickListener {
+            val content = createPostBinding.content.text.toString()
+
+            if(content.isEmpty()){
+                createPostBinding.content.error = "Content cannot be empty"
+                return@setOnClickListener
+            }
+
+            publishPost(content)
+        }
+    }
+
+    private fun showLoader(status: Boolean){
+        createPostBinding.close.isEnabled = !status
+        createPostBinding.publish.isEnabled = !status
+        createPostBinding.imagePreviewBrowse.isEnabled  = !status
+        createPostBinding.imagePreviewClear.isEnabled = !status
+        createPostBinding.content.isEnabled = !status
+
+        createPostBinding.publish.text = if(status) "Publishing..." else "Publish"
+    }
+
+    private fun resetDialogImage(){
+        createPostBinding.imagePreview.setImageDrawable(null)
+        createPostBinding.imagePreviewContent.visibility = View.GONE
+        createPostBinding.imagePreviewBrowseText.text = "Upload Image"
+        uploadedImage = null
+    }
+
+    private suspend fun uploadImageToFirebase(postItem: PostItem): String {
+        return withContext(Dispatchers.IO) {
+            if (uploadedImage == null) {
+                throw IllegalArgumentException("No image selected")
+            }
+
+            val imageRef = FirebaseRepository.getPostImageRef(postItem.id)
+
+            try {
+                imageRef.putFile(uploadedImage!!).await()
+
+                val downloadUrl = imageRef.downloadUrl.await()
+
+                downloadUrl.toString()
+            } catch (e: Exception) {
+                throw e
+            }
+        }
+    }
+
+    private fun publishPost(content: String){
+        showLoader(true)
+
+        val userId = FirebaseRepository.getCurrentUserId()
+
+        val postItem = PostItem(
+            id = UUID.randomUUID().toString(),
+            userId = userId,
+            content = content,
+        )
+
+        lifecycleScope.launch {
+            try{
+                if(uploadedImage !== null){
+                    val downloadableUrl = uploadImageToFirebase(postItem)
+                    postItem.imageUrl = downloadableUrl
+                }
+
+                val postDocument = FirebaseRepository.getPostCollection().document(postItem.id)
+                postDocument.set(postItem).await()
+
+                loadPosts()
+                bottomSheetDialog.dismiss()
+                resetDialogImage()
+                createPostBinding.content.text.clear()
+                showLoader(false)
+                Toast.makeText(requireContext(), "Post published successfully", Toast.LENGTH_SHORT).show()
+            }catch (e: Exception){
+                showLoader(false)
+                Toast.makeText(requireContext(), e.message, Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 }

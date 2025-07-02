@@ -55,4 +55,12 @@ object FirebaseRepository {
     fun getUserOrdersCollection(): CollectionReference {
         return firestore.collection("v_Orders")
     }
+
+    fun getPostCollection(): CollectionReference{
+        return firestore.collection("v_Posts")
+    }
+
+    fun getPostImageRef(postId: String): StorageReference{
+        return storage.reference.child("Vanam/posts/${getCurrentUserId()}/$postId.jpg")
+    }
 }
